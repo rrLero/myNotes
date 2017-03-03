@@ -1,0 +1,16 @@
+---
+title: Requests in Python - как обратиться к апи
+date: 2017-03-03 22:36
+author: rrLero
+tags: Python
+---
+import requests
+
+r = requests.get('https://api.github.com/events')
+
+r = requests.put('http://httpbin.org/put', data = {'key':'value'})
+r = requests.delete('http://httpbin.org/delete')
+r = requests.head('http://httpbin.org/get')
+r = requests.options('http://httpbin.org/get')
+
+Доки: http://docs.python-requests.org/en/master/user/quickstart/
