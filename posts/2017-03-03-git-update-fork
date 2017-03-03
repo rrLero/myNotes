@@ -1,0 +1,19 @@
+---
+title: Git update forked
+date: 2017-03-03 22:30
+author: rrLero
+tags: git
+---
+Чтобы обновить форкнутый репозиторий необходимо четыре шага
+1. git remote add upstream https://github.com/.../....
+2. git fetch upstream
+3. git merge upstream/master
+4. git push origin master
+
+Если вы сначала клонировали оригинальный репозиторий. Сделайте следующее:
+Переименуйте репозиторий origin в upstream:
+1. git remote rename origin upstream
+Создайте новую ветку и свяжите ее с репом upstream:
+2. git branch --track production-fork origin/production
+Чтобы посмотреть с каким репозиторием связаны ветки укажите опцию -vv:
+3. git branch -vv
