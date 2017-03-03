@@ -14,3 +14,4 @@ r = requests.head('http://httpbin.org/get')
 r = requests.options('http://httpbin.org/get')
 
 Доки: http://docs.python-requests.org/en/master/user/quickstart/
+https://khashtamov.com/2015/12/python-requests/
