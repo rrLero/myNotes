@@ -1,28 +1,29 @@
 ---
+layout:
 title: Как построить урл во Фласк
-date: 2017-03-03 22:48
-author: rrLero
 tags: flask
+author: rrLero
+date: 2017-03-03 22:48:00
 ---
 Как построить урл во Фласке
 
->>> from flask import Flask, url_for
->>> app = Flask(__name__)
->>> @app.route('/')
-... def index(): pass
+ from flask import Flask, url_for
+app = Flask(__name__)
+@app.route('/')
+def index(): pass
 ...
->>> @app.route('/login')
-... def login(): pass
+@app.route('/login')
+def login(): pass
 ...
->>> @app.route('/user/<username>')
-... def profile(username): pass
+ @app.route('/user/<username>')
+def profile(username): pass
 ...
->>> with app.test_request_context():
-...  print url_for('index')
-...  print url_for('login')
-...  print url_for('login', next='/')
-...  print url_for('profile', username='John Doe')
-...
+with app.test_request_context():
+print url_for('index')
+print url_for('login')
+print url_for('login', next='/')
+print url_for('profile', username='John Doe')
+
 /
 /login
 /login?next=/
