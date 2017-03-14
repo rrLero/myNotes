@@ -7,16 +7,20 @@ date: 2017-03-03 22:48:00
 ---
 Как построить урл во Фласке
 
+```
  from flask import Flask, url_for
 app = Flask(__name__)
 @app.route('/')
-def index(): pass
+def index(): 
+pass
 ...
 @app.route('/login')
-def login(): pass
+def login(): 
+pass
 ...
  @app.route('/user/<username>')
-def profile(username): pass
+def profile(username): 
+pass
 ...
 with app.test_request_context():
 print url_for('index')
@@ -28,3 +32,4 @@ print url_for('profile', username='John Doe')
 /login
 /login?next=/
 /user/John%20Doe
+```
