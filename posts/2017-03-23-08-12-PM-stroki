@@ -1,12 +1,10 @@
 ---
-preview: 
+preview: Сроки в Python - шпаргалка
 title: Строки в Python
 tags: Python
 author: rrLero
-date: 17-03-23 22:03
+date: 2017-03-23 22:03:00
 ---
-
-
 | Column 1 | Column 2 | 
 | -------- | -------- | 
 |S = 'str'; S = "str"; S = '''str'''; S = """str"""|	Литералы строк|
