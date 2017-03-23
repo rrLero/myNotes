@@ -1,16 +1,14 @@
-
 ---
-preview: No Preview And
-new preview
+preview: Как построить URL во Фласке
 title: Как построить урл во Фласк
 tags: flask
 author: rrLero
 date: 2017-03-03 22:48:00
 ---
-Как построить урл во Фласке
+
 
 ```
- from flask import Flask, url_for
+from flask import Flask, url_for
 app = Flask(__name__)
 @app.route('/')
 def index(): 
