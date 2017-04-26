@@ -1,0 +1,61 @@
+---
+preview: Vagrant start
+title: Запуск Vagrant
+tags: Vagrant
+author: rrLero
+date: 17-04-26 22:15
+---
+1. Надо скачать VirtualBox https://www.virtualbox.org/wiki/Downloads
+2. Vagrant https://www.vagrantup.com/
+3. PuTTY and PuTTYGen http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+
+Затем в PyCharm надо создать два файла
+Programming-Basics/Vagrantfile
+```
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/xenial64"
+
+  config.vm.network  :forwarded_port, guest: 3080, host: 3080
+
+  config.vm.hostname = "vagrant-1"
+  config.vm.provision :shell, path: "install.sh"
+
+end
+```
+Programming-Basics/install.sh
+```
+#!/usr/bin/env bash
+
+echo '---===   UPDATING BEGIN   ===---'
+sudo apt-get update && sudo apt-get upgrade
+echo '---===   UPDATING  END    ===---'
+
+echo '---=== PYENV REQUIREMENTS INSTALLATION BEGIN ===---'
+sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils
+echo '---=== PYENV REQUIREMENTS INSTALLATION  END  ===---'
+
+echo '---=== PYENV INSTALLATION BEGIN  ===---'
+su -l ubuntu -c 'curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash'
+echo '---=== PYENV INSTALLATION  END   ===---'
+
+# vim .bash_profile
+#
+# export PATH="~/.pyenv/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+
+# echo 'cd /vagrant' >> ~/.bash_profile
+```
+
+4. Затем vagrant up
+5. vagrant ssh
+6. vim .bash_profile и вставляем туда данные закомментированные
+7. перейти в режим редактирования - insert , сохранить - :wq
+8. pyenv install 3.6.1
+9. pyenv global 3.6.1
+10. pyenv virtualenv 3.6.1 name_enviroment
+11. pyenv local 3.6.1/envs/name_enviroment
