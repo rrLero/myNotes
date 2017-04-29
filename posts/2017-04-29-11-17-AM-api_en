@@ -1,9 +1,9 @@
 ---
 preview: api in English
 title: API git_blog documentation in English
-tags: api
+tags: api, -----post-locked-by:rrLero
 author: rrLero
-date: 17-04-29 13:47
+date: 2017-04-29 13:47:00
 ---
 In this moment backend situated on http://gitblog.pythonanywhere.com - thisis the begining of all requests to api.
 
