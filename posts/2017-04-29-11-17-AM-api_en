@@ -1,7 +1,7 @@
 ---
 preview: api in English
 title: API git_blog documentation in English
-tags: api, -----post-locked-by:rrLero
+tags: api
 author: rrLero
 date: 2017-04-29 13:47:00
 ---
@@ -58,7 +58,7 @@ access_token - special key token by authorazation  on our platform
 **11. Request to edit specific comment**
 > *`/<git_name>/<git_repository_blog>/api/get_comments/<id_comment>?access_token=access_token`method=PUT only authorized request. need to outcome json with {'body': 'new_text_of_old_comment'}, will output status of request (success or not)
  
-**12. Запрос на закрытие/открытие комментариев к конкретному посту**
+**12. Request to open/close comments to specific post**
 > *`/<git_name>/<git_repository_blog>/api/lock_comments/<id_file>?access_token=access_token`метод=GET/DELETE запрос только аворизированный. Открывает/закрывает возможность оставлять комментарии. id_file получаем изи запроса 2 - оно же имя файла в папке /posts.
  
  **13. Запрос на получение статуса комментария (закрыт или открыт)**
