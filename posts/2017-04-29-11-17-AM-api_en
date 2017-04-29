@@ -1,7 +1,7 @@
 ---
 preview: api in English
 title: API git_blog documentation in English
-tags: api, -----post-locked-by:rrLero
+tags: api
 author: rrLero
 date: 2017-04-29 13:47:00
 ---
@@ -46,17 +46,17 @@ access_token - special key token by authorazation  on our platform
 **7. Request to get dict of all comments to all posts in one specific user's blog**
 > *`/<git_name>/<git_repository_blog>/api/get_comments`method=GET. better send authorized request in arguments, but works anyway, will output json with comments dict 
  
-**8. Запрос на получение комментариев к одному посту блога Юзера**
-> *`/<git_name>/<git_repository_blog>/api/get_comments/<id_file>`метод=GET. лучше отправлять авторизированно через токен в аргументах, но выведет и без токена, на выходе отдастт json со списком комментариев к этому посту, id_file - оно же имя файла в папке /posts.
+**8. Request to get comments to specific post of user's blog**
+> *`/<git_name>/<git_repository_blog>/api/get_comments/<id_file>`method=GET. etter send authorized request in arguments, but works anyway, will output json with list of comments to this post, id_file - the same that the name of the file in folder /posts.
  
-**9. Запрос на удаление одного комментария**
-> *`/<git_name>/<git_repository_blog>/api/get_comments/<id_comment>?access_token=access_token`метод=DELETE запрос только аворизированный. id_comment - берется из 8 запроса - удаляет комментарий по его id
+**9. Request to delete one comment**
+> *`/<git_name>/<git_repository_blog>/api/get_comments/<id_comment>?access_token=access_token`method=DELETE in request access token required in arguments without token will not work. id_comment - gettinf from 8 request - delete comment by it id
 
-**10. Запрос на добавление одного комментария**
-> *`/<git_name>/<git_repository_blog>/api/get_comments?access_token=access_token`метод=POST запрос только аворизированный. Должен прийти json с {'body': 'text_of_new_comment'}, отдаст json с новым комментом  (его содержание, его id, дата, автор)
+**10. Request to add one comment**
+> *`/<git_name>/<git_repository_blog>/api/get_comments?access_token=access_token`method=POST only authorized.  need  outcome with  json  {'body': 'text_of_new_comment'}, will output json with new comment (hit data, it id, date, author)
  
-**11. Запрос на редактирование конкретного комментария**
-> *`/<git_name>/<git_repository_blog>/api/get_comments/<id_comment>?access_token=access_token`метод=PUT запрос только аворизированный. Должен прийти json с {'body': 'new_text_of_old_comment'}, отдаст статус запроса (успешно или нет)
+**11. Request to edit specific comment**
+> *`/<git_name>/<git_repository_blog>/api/get_comments/<id_comment>?access_token=access_token`method=PUT only authorized request. need to outcome json with {'body': 'new_text_of_old_comment'}, will output status of request (success or not)
  
 **12. Запрос на закрытие/открытие комментариев к конкретному посту**
 > *`/<git_name>/<git_repository_blog>/api/lock_comments/<id_file>?access_token=access_token`метод=GET/DELETE запрос только аворизированный. Открывает/закрывает возможность оставлять комментарии. id_file получаем изи запроса 2 - оно же имя файла в папке /posts.
