@@ -1,0 +1,17 @@
+---
+preview: как в Python3 можно выполнить удаление строк в файле согласно списка counter = [1 , 7, 8, 9, ,4]?
+title: Удалить строки из Python
+tags: Python
+author: rrLero
+date: 17-05-05 23:28
+---
+```
+
+ f = open(path).readlines()
+ for i in sorted(counter, reverse=True):
+        f.pop(i)
+ with open(path, 'w') as F:
+        F.writelines(f)
+
+
+```
