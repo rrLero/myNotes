@@ -1,0 +1,81 @@
+---
+preview: Развертывание flask на heroku
+title: herocu
+tags: herocu
+author: rrLero
+date: 17-05-13 23:01
+---
+1. Запустить в терминале
+```
+sudo add-apt-repository "deb https://cli-assets.heroku.com/branches/stable/apt ./"
+
+curl -L https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+
+$sudo apt-get update
+
+$sudo apt-get install heroku
+```
+2.  В терминале:
+```
+$heroku login
+Enter your Heroku credentials.
+Email: python@example.com
+Password:
+...
+```
+3. Клонировать какойто репозиторий с приложением работающим и проверенным локально
+```
+$git clone https://github.com/heroku/python-getting-started.git
+
+$cd python-getting-started
+```
+4. Create an app on Heroku, which prepares Heroku to receive your source code:
+```
+$heroku create
+Creating lit-bastion-5032 in organization heroku... done, stack is cedar-14
+http://lit-bastion-5032.herokuapp.com/ | https://git.heroku.com/lit-bastion-5032.git
+Git remote heroku added
+```
+5. Flask file должен содержать:
+```
+ if __name__ == '__main__':
+     app.debug = True
+     port = int(os.environ.get("PORT", 5000))
+     app.run(host='0.0.0.0', port=port)
+```
+6. Procfile должен находится в корневой папке и содержать:
+```
+web: python flask_app.py
+```
+7. requirements.txt тоже в корне например:
+```
+alembic==0.9.1
+click==6.7
+Flask==0.12
+Flask-Cors==3.0.2
+itsdangerous==0.24
+Jinja2==2.9.5
+Mako==1.0.6
+MarkupSafe==0.23
+pandoc==1.0.0b2
+ply==3.10
+pyandoc==0.2.0
+python-editor==1.0.3
+requests==2.13.0
+six==1.10.0
+SQLAlchemy==1.1.6
+Werkzeug==0.11.15
+```
+8. runtime.txt в корне с актуальной версией Python для приложения:
+```
+python-3.6.1
+```
+9. затем запушим реп на хероку:
+```
+$git push heroku master
+```
+10. И пробуем запускать:
+```
+$heroku ps:scale web=1
+$heroku open
+```
