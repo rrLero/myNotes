@@ -1,0 +1,61 @@
+---
+preview: ![](http://kinlane-productions.s3.amazonaws.com/api-evangelist-site/company/logos/flask-restful-logo.png)
+Попробовав использовать Flask для построения API для платформы Git-Platform на курсах MOC, я понял, что код получается громоздкий и трудно читаемый (может, правда, я слаб еще), но погуглив я нашел интересную библиотеку Flask_restfull, с ней код получается гораздо красивее и читабельнее, и очень легко понять, если уже разобраля с flask неплохо.
+Хочу занотить важные моменты дабы не забыть.
+title: Flask Rest_full API - мне понравился метод
+tags: flask
+author: rrLero
+date: 17-05-15 19:49
+---
+вот так выглядит мой первый опыт работы с flask_restfull
+```
+from flask_restful import reqparse, abort, Resource
+from models.gitaccess import GitAccess
+from flask import jsonify
+
+
+parser = reqparse.RequestParser()
+parser.add_argument('access_token')
+
+
+def auth():
+    args = parser.parse_args()
+    access_token = args.get('access_token')
+    if not access_token:
+        return False
+    return access_token
+
+
+class Likes(Resource):
+    def get(self, git_name, git_repository_blog, id_comment):
+        access_token = auth()
+        if not access_token:
+            return {'access_token': access_token}, 401
+        git_access = GitAccess(git_name, git_repository_blog, access_token)
+        likes = git_access.get_reaction(id_comment)
+        list_likes = [one_like for one_like in likes.json()]
+        return list_likes
+
+    def post(self, git_name, git_repository_blog, id_comment):
+        access_token = auth()
+        if not access_token:
+            return {'access_token': access_token}, 401
+        git_access = GitAccess(git_name, git_repository_blog, access_token)
+        root_parser = parser.add_argument('content', required=True, type=str, location='json')
+        json_data = root_parser.parse_args(strict=True)
+        create_like = git_access.create_reaction(id_comment, json_data)
+        return '', create_like.status_code
+```
+Код выше я вынес в отдельный класс и поместил его в папку Likes
+
+В app.py всего лишь пришлось добавить в начале файла:
+```
+app = Flask(__name__)
+api = Api(app)
+```
+
+а путь добавляется вот так:
+```
+api.add_resource(Likes, '/<git_name>/<git_repository_blog>/<id_comment>/api/likes')
+```
+В таком виде (по моему) код читается гораздо лучше
