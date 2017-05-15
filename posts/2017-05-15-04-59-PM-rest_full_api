@@ -3,9 +3,9 @@ preview: ![](http://kinlane-productions.s3.amazonaws.com/api-evangelist-site/com
 Попробовав использовать Flask для построения API для платформы Git-Platform на курсах MOC, я понял, что код получается громоздкий и трудно читаемый (может, правда, я слаб еще), но погуглив я нашел интересную библиотеку Flask_restfull, с ней код получается гораздо красивее и читабельнее, и очень легко понять, если уже разобраля с flask неплохо.
 Хочу занотить важные моменты дабы не забыть.
 title: Flask Rest_full API - мне понравился метод
-tags: flask
+tags: flask, -----post-locked-by:rrLero
 author: rrLero
-date: 17-05-15 19:49
+date: 2017-05-15 19:49:00
 ---
 вот так выглядит мой первый опыт работы с flask_restfull
 ```
