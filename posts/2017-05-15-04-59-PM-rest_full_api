@@ -3,7 +3,7 @@ preview: ![](http://kinlane-productions.s3.amazonaws.com/api-evangelist-site/com
 Попробовав использовать Flask для построения API для платформы Git-Platform на курсах MOC, я понял, что код получается громоздкий и трудно читаемый (может, правда, я слаб еще), но погуглив я нашел интересную библиотеку Flask_restfull, с ней код получается гораздо красивее и читабельнее, и очень легко понять, если уже разобраля с flask неплохо.
 Хочу занотить важные моменты дабы не забыть.
 title: Flask Rest_full API - мне понравился метод
-tags: flask, -----post-locked-by:rrLero
+tags: flask
 author: rrLero
 date: 2017-05-15 19:49:00
 ---
@@ -59,3 +59,48 @@ api = Api(app)
 api.add_resource(Likes, '/<git_name>/<git_repository_blog>/<id_comment>/api/likes')
 ```
 В таком виде (по моему) код читается гораздо лучше
+
+А это памятка, как работать данными поступающими в запросах, код ниже можно скопировать в PyCharm запустить и поиграться, по-моему все понятно прекрасно (этот код я сам придумал)
+```
+from flask import Flask, request
+from flask_restful import Resource, Api
+from flask_restful import reqparse
+
+
+app = Flask(__name__)
+api = Api(app)
+parser = reqparse.RequestParser()
+
+parser.add_argument('test', type=int, help="Name cannot be str")
+parser.add_argument('test2', required=True, help="Name cannot be blank!")
+parser.add_argument('test3', type=int, required=True, help="Name cannot be blank or str!")
+parser.add_argument('test4', type=int, required=True, location='json', help="Name cannot be blank or str or not in json!")
+parser.add_argument('test5', type=list, required=True, location='json', help="Name cannot be blank or str or not in json!")
+
+# запрос для Python консоли - просто скопировать в консоль
+# x = requests.post('http://0.0.0.0:5000/', json = {'test': '1', 'test2': 2, 'test3': 3, 'test4': 4, 'test5': [1,2,3]})
+
+
+class HelloWorld(Resource):
+    def get(self):
+        return {'hello': 'world'}
+
+    def post(self):
+        args = parser.parse_args()
+        print(args, type(args))
+        print(args.get('test'), type(args.get('test')))
+        print(args.get('test2'), type(args.get('test2')))
+        print(args.get('test5'), type(args.get('test5')))
+        return args
+
+    def delete(self):
+
+        return '', 200
+
+
+api.add_resource(HelloWorld, '/', '/hello')
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
+		```
