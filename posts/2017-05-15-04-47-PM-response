@@ -1,7 +1,7 @@
 ---
 preview: ![](http://flask.pocoo.org/static/logo/flask.png)
 title: Flask Response
-tags: flask, -----post-locked-by:rrLero
+tags: flask
 author: rrLero
 date: 2017-05-15 19:42:00
 ---
@@ -21,3 +21,11 @@ def get_data():
 def get_data():
     return {'foo': 'bar'}, 201
 ```
+
+```
+@app.route('/data')
+def index():
+    # ...
+    return render_template('data.json'), 201, {'Content-Type': 'application/json'}
+```
+Пример выше показывает, как Flask заменяет код ответа 200 по умолчанию на принудительный 201. В примере также установлен параметр Content-Type заголовка ответа, явно указывающий на содержащиеся в ответе данные в формате JSON (по умолчанию Flask возвращает тип HTML).
