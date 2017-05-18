@@ -1,7 +1,7 @@
 ---
 preview: Для того чтобы подключить базу к Heroku необходимо
 title: Подключить базу postgres к Heroku
-tags: herocu, -----post-locked-by:rrLero
+tags: herocu
 author: rrLero
 date: 2017-05-18 22:05:00
 ---
@@ -90,6 +90,7 @@ else:
     url = os.environ['DATABASE_URL']
 ```
 здесь проверяется появилось ли в окружении DATABASE_URL? так как Heroku там хранит путь к базе.
+Благодаря этому коду я могу запускать приложение и локально и на хероку не измененяя путь базы.
 
 Также я запустил сервер gunicorn поэтому в Procfile такая инфа:
 `web: gunicorn app:app`
