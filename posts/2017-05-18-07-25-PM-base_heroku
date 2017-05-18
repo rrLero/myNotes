@@ -1,7 +1,7 @@
 ---
 preview: Для того чтобы подключить базу к Heroku необходимо
 title: Подключить базу postgres к Heroku
-tags: herocu, -----post-locked-by:rrLero
+tags: herocu
 author: rrLero
 date: 2017-05-18 22:05:00
 ---
@@ -103,3 +103,9 @@ else:
 * Ну и импортируем уже готовую базу на хероку
 
 Мне кажется это неплохой подход, для того что-бы начать работать с приложением на хероку
+
+**Дополнительно:**
+Если не пуш идет не в нужное приложение Хероку, то 
+`git remote set-url heroku https://git.heroku.com/polar-cove-4803.git`
+с правильным урлом конечно же и затем
+`git push heroku master`
