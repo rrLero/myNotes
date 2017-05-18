@@ -1,16 +1,15 @@
 ---
-preview: Создаем виртуальное окружение и устанавливаем туда 
+preview: Создаем виртуальное окружение и устанавливаем туда
 ```
 pip install alembic
 pip install psycopg2
 ```
-
-
 title: Как подключить базу данных Postgresql
-tags: db
+tags: db, -----post-locked-by:rrLero
 author: rrLero
-date: 17-05-18 14:25
+date: 2017-05-18 14:25:00
 ---
+
 Необходимо создать базу postgres, так как автоматически (в отличие от sqllite она не создатся)
 **Устанавливаем PostgreSQL 9.1 из репозиториев:**
 ```
