@@ -1,9 +1,9 @@
 ---
 preview: Для того чтобы подключить базу к Heroku необходимо
 title: Подключить базу postgres к Heroku
-tags: herocu
+tags: herocu, -----post-locked-by:rrLero
 author: rrLero
-date: 17-05-18 22:05
+date: 2017-05-18 22:05:00
 ---
 Необходимо установить addon Heroku https://elements.heroku.com/addons/heroku-postgresql для базы данных postgres
 
