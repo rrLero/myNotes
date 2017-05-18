@@ -1,0 +1,113 @@
+---
+preview: Создаем виртуальное окружение и устанавливаем туда 
+```
+pip install alembic
+pip install psycopg2
+```
+
+
+title: Как подключить базу данных Postgresql
+tags: db
+author: rrLero
+date: 17-05-18 14:25
+---
+Необходимо создать базу postgres, так как автоматически (в отличие от sqllite она не создатся)
+**Устанавливаем PostgreSQL 9.1 из репозиториев:**
+```
+     sudo apt-get update
+     sudo apt-get install postgresql-9.1
+```
+Cогласно стандарту базы данных должны располагаться в "/var/lib/". А бинарные файлы СУБД (файлы для запуска/управления сервером БД) у меня расположились в папке "/usr/lib/postgresql/9.6/bin"
+
+**Добавляем пользователя "postgres" и назначаем ему пароль**
+Т.к. пользователь postgres уже создан автоматически, то достаточно просто назначить ему свой пароль командой:
+`     sudo passwd postgres`
+и ввести пароль
+
+**Если стандартный кластер нас не устраивает** (или мы хотим еще один), то выполняем команду (от имени root или postgres)
+ `su postgres` 
+```
+pg_createcluster --locale en_US.UTF-8 --start 9.6 data
+```
+которая запилит настройки кластера в каталог
+/etc/postgresql/9.4/data/
+и установит путь до кластера
+/var/lib/postgresql/9.4/data
+с локалью en_US.UTF-8
+
+**Запуск и остановку кластера следует осуществлять командами:**
+```
+pg_ctlcluster 9.4 data start
+pg_ctlcluster 9.4 data stop
+```
+**Дополнительные полезные настройки и команды.**
+После установки PostgreSQL настроена на использование "ident" аутентификации, что означает, что она ассоциирует роли в PostgreSQL с совпадающим именем системного аккаунта. Таким образом, нужно создать новую роль с именем пользовательского аккаунта, от которого мы будем использовать БД. Запускаем от имени postgres:
+`createuser --interactive`
+и отвечаем на вопросы (из соображений безопасности рекомендуются не давать больше прав чем необходимо)
+Роли создаются на кластер. Если нам нужно создать роль для кластера на нестандартном порту, то это нужно указать явно:
+`createuser -p 5433 --interactive`
+
+Теперь можно создать базу данных в кластере от имени своего пользователя в системе:
+createdb
+создастся база в кластере на стандартном порту и имя БД будет совпадать с именем пользователя
+если мы хотим нестандартных параметров, то необходимо указать желаемое имя базы и порт для кластера не по умолчанию:
+`createdb -p 5433 test1`
+
+Если уж сильно не хочется много печатать, то можно для КОНКРЕТНОГО пользователя (а не как в инструкции выше для всех пользователей системы) выставить значения по умолчанию добавив в конец .bashrc (или соответствующий конфиг для другого shell):
+export PGDATA="/var/lib/postgresql/9.4/data"
+export PGPORT="5433"
+
+**После создания базы данных необходимо запустить:**
+`alembic init alembic`
+и в вновь появившемся файле alembic.ini прописать путь к базе 
+в моем случае так `sqlalchemy.url = postgresql:///my_terst_base`
+
+затем я создал файл my_models.py и записал туда таблицы моей базы
+```
+from sqlalchemy import Column, DateTime, String, Integer, func, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+
+Base = declarative_base()
+
+
+class Player(Base):
+    __tablename__ = 'player'
+    id = Column(Integer, primary_key=True)
+    player_name = Column(String)
+    player_surname = Column(String)
+    photo_path = Column(String)
+    # relationships
+    lnk_tournaments_players = relationship('Tournaments')
+
+
+class Tournaments(Base):
+    __tablename__ = 'tournaments'
+    id = Column(Integer, primary_key=True)
+    player_id = Column(Integer, ForeignKey('player.id'), nullable=False)
+    place = Column(Integer, nullable=False)
+    points = Column(Integer, nullable=False)
+```
+
+**далее** можно вручную добавлять таблицы в базу, а можно настроить автогенерацию, для этого в файл env.py необходимо добавить путь к моделям в моем случае это так
+```
+from __future__ import with_statement
+from alembic import context
+from sqlalchemy import engine_from_config, pool
+from logging.config import fileConfig
+import os
+import sys
+sys.path.append(os.getcwd())
+parent_dir = os.path.abspath(os.path.join(os.getcwd(), ".."))
+sys.path.append(parent_dir)
+from my_models import Base
+
+
+target_metadata = Base.metadata
+```
+и затем выполнить команды
+```
+alembic revision --autogenerate -m "some text"
+alembic upgrade head
+```
+если все правильно, по идее должны появиться таблицы в базе данных
