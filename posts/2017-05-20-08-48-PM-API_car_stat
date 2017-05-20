@@ -1,7 +1,7 @@
 ---
 preview: Инструкция к бекенду к приложению статистики
 title: Car Statistics APP
-tags: APP, -----post-locked-by:rrLero
+tags: APP
 author: rrLero
 date: 2017-05-20 23:25:00
 ---
@@ -15,12 +15,12 @@ date: 2017-05-20 23:25:00
 
 
 **ОПЕРАЦИИ С ТАБЛИЦЕЙ CARS**
-* **GET /<int:user_id>/car** -вернет список машин из базы в виде json
-* ** POST /<int:user_id>/car** + json = {'gov_number': 'some_number', 'car_type': 'car_type', 'gov_number_trailer': 'gov_number_trailer'} - добавляет машину в базу данных. Вернет статус + сообщение о выполненной операции.
-* **DELETE /<int:user_id>/car/<int:car_id>** - удалит машину данного юзера с таким car_id из БД.  Вернет статус + сообщение о выполненной операции.
+* **GET /(int:user_id)/car** -вернет список машин из базы в виде json
+* ** POST /(int:user_id)/car** + json = {'gov_number': 'some_number', 'car_type': 'car_type', 'gov_number_trailer': 'gov_number_trailer'} - добавляет машину в базу данных. Вернет статус + сообщение о выполненной операции.
+* **DELETE /(int:user_id)/car/(int:car_id)** - удалит машину данного юзера с таким car_id из БД.  Вернет статус + сообщение о выполненной операции.
 
 
 **ОПЕРАЦИИ С ТАБЛИЦЕЙ NOTES**
-* **GET /<int:user_id>/notes **- вернет список всех записей о ТО из базы в виде json
-* **POST /<int:user_id>/notes/<int:car_id> **+ json = {'date': 'date', 'km': 'km', 'works': 'works description', 'pays': 'price of works'} - добавляет запись о ТО машины с таким id юзера от которого идет запрос
-* **DELETE /<int:user_id>/notes/<int:note_id> ** - удалит запись о ТО данного юзера по id этой записи. Вернет статус + сообщение о выполненной операции.
+* **GET /(int:user_id)/notes **- вернет список всех записей о ТО из базы в виде json
+* **POST /(int:user_id)/notes/(int:car_id) **+ json = {'date': 'date', 'km': 'km', 'works': 'works description', 'pays': 'price of works'} - добавляет запись о ТО машины с таким id юзера от которого идет запрос
+* **DELETE /(int:user_id)/notes/(int:note_id) ** - удалит запись о ТО данного юзера по id этой записи. Вернет статус + сообщение о выполненной операции.
