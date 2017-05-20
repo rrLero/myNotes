@@ -1,9 +1,9 @@
 ---
 preview: Инструкция к бекенду к приложению статистики
 title: Car Statistics APP
-tags: APP
+tags: APP, -----post-locked-by:rrLero
 author: rrLero
-date: 17-05-20 23:25
+date: 2017-05-20 23:25:00
 ---
 Бекенд находится здесь: https://floating-scrubland-23282.herokuapp.com
  user_id - id пользователя по которому будут фильтроваться все действия в БД
