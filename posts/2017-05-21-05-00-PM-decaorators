@@ -1,9 +1,9 @@
 ---
 preview: Что-бы написать декоратор необходимо:
 title: Декоратор для authorization
-tags: flask
+tags: flask, -----post-locked-by:rrLero
 author: rrLero
-date: 17-05-21 19:55
+date: 2017-05-21 19:55:00
 ---
 ```
 from flask import request, abort
