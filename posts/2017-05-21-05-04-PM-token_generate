@@ -1,18 +1,16 @@
 ---
 preview: **В Python генерация случайной строки, состоящая только из ASCII символов верхнего регистра, может быть выполнена так:**
-
 ```
 from random import choice
 from string import ascii_uppercase
-
 print(''.join(choice(ascii_uppercase) for i in range(12)))
 ```
-
 title: Генератор Токена
-tags: Python
+tags: Python, -----post-locked-by:rrLero
 author: rrLero
-date: 17-05-21 20:01
+date: 2017-05-21 20:01:00
 ---
+
 **Для генерации случайной строки из любых ASCII символов, используйте следующий код:**
 ```
 from random import choice
