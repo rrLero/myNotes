@@ -6,11 +6,10 @@ from string import ascii_uppercase
 print(''.join(choice(ascii_uppercase) for i in range(12)))
 ```
 title: Генератор Токена
-tags: Python, -----post-locked-by:rrLero
+tags: Python
 author: rrLero
 date: 2017-05-21 20:01:00
 ---
-
 **Для генерации случайной строки из любых ASCII символов, используйте следующий код:**
 ```
 from random import choice
