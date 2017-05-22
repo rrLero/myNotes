@@ -1,7 +1,7 @@
 ---
 preview: Инструкция к бекенду к приложению статистики
 title: Car Statistics APP
-tags: APP, -----post-locked-by:rrLero
+tags: APP
 author: rrLero
 date: 2017-05-20 23:25:00
 ---
@@ -18,6 +18,7 @@ date: 2017-05-20 23:25:00
 * **GET /car** -вернет список машин из базы в виде json
 * ** POST /car** + json = {'gov_number': 'some_number', 'car_type': 'car_type', 'gov_number_trailer': 'gov_number_trailer'} - добавляет машину в базу данных. Вернет статус + сообщение о выполненной операции.
 * **DELETE /car/(int:car_id)** - удалит машину данного юзера с таким car_id из БД.  Вернет статус + сообщение о выполненной операции.
+* **PUT /car/(int:car_id)** + json = {'gov_number': 'some_number', 'car_type': 'car_type', 'gov_number_trailer': 'gov_number_trailer'} - редактирует машину в базу данных. Вернет статус + сообщение о выполненной операции.
 
 
 **ОПЕРАЦИИ С ТАБЛИЦЕЙ NOTES**- все запосы авторизированные, необходимо отправлять в аргументах token, если токена нет, то будет приходить ошибка 401
