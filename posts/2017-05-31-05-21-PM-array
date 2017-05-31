@@ -1,0 +1,12 @@
+---
+preview: Массив: перебирающие методы
+title: Массив: перебирающие методы
+tags: JS
+author: rrLero
+date: 17-05-31 20:13
+---
+* ** forEach** – для перебора массива. https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/forEach
+* **filter **– для фильтрации массива. https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/filter
+* **every/some** – для проверки массива. https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/every
+* **map** – для трансформации массива в массив. https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/map
+* **reduce/reduceRight** – для прохода по массиву с вычислением значения. https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/reduce
