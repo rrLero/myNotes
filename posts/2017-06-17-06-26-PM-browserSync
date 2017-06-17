@@ -1,0 +1,8 @@
+---
+preview: BrowserSync
+title: BrowserSync
+tags: JS
+author: rrLero
+date: 17-06-17 21:25
+---
+browser-sync start --server --directory --files "**/*"
