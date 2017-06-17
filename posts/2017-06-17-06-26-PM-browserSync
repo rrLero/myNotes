@@ -1,8 +1,8 @@
 ---
 preview: BrowserSync
 title: BrowserSync
-tags: JS
+tags: JS, -----post-locked-by:rrLero
 author: rrLero
-date: 17-06-17 21:25
+date: 2017-06-17 21:25:00
 ---
 browser-sync start --server --directory --files "**/*"
