@@ -1,0 +1,26 @@
+---
+preview: Cookies- JS
+title: JS-cookies
+tags: JS
+author: rrLero
+date: 17-07-08 16:12
+---
+Пример работы  с cookies
+```
+var app = angular.module("cookieApp", ["ngCookies"]);
+app.controller("cookieCtrl", function ($scope, $cookies) {
+    $scope.setCookie = function () {
+        console.log("setCookie");
+
+        var now = new Date();
+        now.setDate(now.getDate() + 7);
+
+        $cookies.put("tech", "angularjs", {
+            expires: now
+        });
+    }
+    $scope.getCookie = function () {
+        alert($cookies.get("tech"));
+    }
+});
+```
