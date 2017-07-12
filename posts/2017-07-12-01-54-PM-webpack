@@ -1,0 +1,361 @@
+---
+preview: To start new project with WebPack
+title: WebPack - begins
+tags: JS
+author: rrLero
+date: 17-07-12 16:32
+---
+**Need node and npm to be installed on my PC.**
+
+* Create package.json, here example of such file from my car-stat app 
+```
+{
+  "name": "carstat",
+  "version": "0.0.1",
+  "description": "car statistic",
+  "main": "app.module.js",
+  "scripts": {
+    "start": "webpack-dev-server --inline --progress",
+    "build-prod": "rm -rf dist && webpack --config config/webpack.prod.js --bail",
+    "dev": "lite-server",
+    "build": "webpack"
+  },
+  "author": "rrlero",
+  "license": "ISC",
+  "dependencies": {
+    "@uirouter/angularjs": "^1.0.5",
+    "angular": "^1.6.5",
+    "angular-local-storage": "^0.6.0",
+    "angular-ui-router": "^0.3.2",
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^7.1.2",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "compression-webpack-plugin": "^0.4.0",
+    "concurrently": "^3.5.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.4",
+    "exports-loader": "^0.6.4",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "html-webpack-plugin": "^2.29.0",
+    "lite-server": "^2.3.0",
+    "node-sass": "^4.5.3",
+    "postcss-loader": "^2.0.6",
+    "raw-loader": "^0.5.1",
+    "sass-loader": "^6.0.6",
+    "source-map-loader": "^0.2.1",
+    "style-loader": "^0.18.2",
+    "webpack": "3.1",
+    "webpack-chunk-hash": "^0.4.0",
+    "webpack-dev-middleware": "^1.11.0",
+    "webpack-dev-server": "2.5.1",
+    "webpack-merge": "^4.1.0"
+  }
+}
+```
+
+* then input `npm i`
+
+* in the main folder create **/config** folder, which should contain such files:
+**helper.js**
+```
+let path = require('path');
+
+let _root = path.resolve(__dirname, '..');
+
+function root(args) {
+    args = Array.prototype.slice.call(arguments, 0);
+    return path.join.apply(path, [_root].concat(args));
+}
+
+function packageSort(packages) {
+    let len = packages.length - 1;
+    let first = packages[0];
+    let last = packages[len];
+    return function sort(a, b) {
+        if (a.names[0] === first) {
+            return -1;
+        }
+        if (a.names[0] === last) {
+            return 1;
+        }
+        if (a.names[0] !== first && b.names[0] === last) {
+            return -1;
+        } else {
+            return 1;
+        }
+        return 0;
+    };
+}
+
+
+exports.root = root;
+exports.packageSort = packageSort;
+```
+
+**webpack.common.js**
+```
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const helpers = require('./helpers');
+
+const ENV = process.env.NODE_ENV;
+
+module.exports = {
+    entry: {
+        vendor: './src/app/vendor',
+        app: './src/app/app.module'
+    },
+
+    resolve: {
+        extensions: ['.js', '.json', '.html', '.css', '.scss', '.xlf'],
+        modules: [helpers.root('src'), 'node_modules']
+    },
+
+    module: {
+        rules: [{
+                test: /\.html$/,
+                use: 'raw-loader'
+            },
+            {
+                test: /\.(woff|woff2|ttf|eot|ico)$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: 'assets/[name].[ext]'
+                    }
+                }]
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg|ico)$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: 'images/[name].[ext]'
+                    }
+                }]
+            },
+            {
+               test: /\.js$/,
+               exclude: /node_modules/,
+               use: {
+                   loader: 'babel-loader',
+                   options: {
+                       presets: ['env']
+                   }
+               }
+           },
+            // {
+            //     test: /\.json$/,
+            //     include: [
+            //         helpers.root('public/i18n')
+            //     ],
+            //     use: [{
+            //         loader: 'file-loader',
+            //         options: {
+            //             name: 'assets/i18n/[name].[ext]'
+            //         }
+            //     }]
+            // },
+            // {
+            //     test: /\.htaccess$/,
+            //     use: [{
+            //         loader: 'file-loader',
+            //         options: {
+            //             name: './.htaccess'
+            //         }
+            //     }]
+            // },
+            {
+                test: /\.(scss|sass|css)$/i,
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [{
+                            loader: 'css-loader',
+                            options: {
+                                minimize: ENV === 'production'
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                sourceMap: true
+                            }
+                        },
+                        // 'resolve-url-loader',
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sourceMap: true
+                            }
+                        }
+                    ]
+                })
+            },
+            {
+                test: /\.xlf$/,
+                use: 'raw-loader'
+            },
+        ]
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: ['app', 'vendor']
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            chunksSortMode: helpers.packageSort(['vendor', 'app'])
+        })
+    ]
+};
+```
+
+**webpack.dev.js**
+```
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const commonConfig = require('./webpack.common');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const helpers = require('./helpers');
+
+const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
+
+module.exports = webpackMerge(commonConfig, {
+    devtool: 'eval-source-map',
+
+    output: {
+        path: helpers.root('dist'),
+        publicPath: 'http://localhost:8080/',
+        filename: '[name].js',
+        chunkFilename: '[id].chunk.js'
+    },
+
+    plugins: [
+        new ExtractTextPlugin('[name].css'),
+        new webpack.NamedModulesPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'ENV': JSON.stringify(ENV)
+            }
+        })
+    ],
+
+    devServer: {
+        historyApiFallback: true,
+        stats: 'minimal'
+    }
+});
+```
+
+**webpack.prod.js**
+```
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const commonConfig = require('./webpack.common');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const WebpackChunkHash = require('webpack-chunk-hash');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const helpers = require('./helpers');
+
+const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+
+module.exports = webpackMerge(commonConfig, {
+    devtool: 'source-map',
+
+    output: {
+        path: helpers.root('dist'),
+        filename: '[name].[chunkhash].js',
+        chunkFilename: '[name].[chunkhash].js'
+    },
+
+    plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        new webpack.LoaderOptionsPlugin({
+            htmlLoader: {
+                minimize: false
+            }
+        }),
+        new WebpackChunkHash({
+            algorithm: 'md5'
+        }),
+        new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            },
+            output: {
+                comments: false
+            },
+            mangle: {
+                keep_fnames: true
+            },
+            sourceMap: false,
+        }),
+        new CompressionPlugin({
+            asset: '[path].gz[query]',
+            algorithm: 'gzip',
+            test: /\.(js|css|html|json|ico|svg|eot|otf|ttf)$/,
+            threshold: 10240,
+            minRatio: 0.8
+        }),
+        new ExtractTextPlugin({
+            filename: '[name].[chunkhash].css',
+            allChunks: true
+        }),
+        // new CopyWebpackPlugin([{
+        //     from: __dirname + '/src/public'
+        // }]),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'ENV': JSON.stringify(ENV)
+            }
+        })
+    ]
+});
+```
+
+* in the main folder also need file:
+**postcss.config.js**
+
+```
+module.exports = {
+    plugins: [
+        require('autoprefixer')
+    ]
+};
+```
+
+**.jshintrc**
+
+```
+{
+    "esnext": true,
+    "node": true,
+    "predef": ["angular"],
+    "browser": true,
+    "undef": true,
+    "unused": false,
+    "curly": true,
+    "indent": 4,
+    "devel": true,
+    "eqeqeq": true
+}
+```
+
+Main folder should have such structure:
+/config (with configs described before)
+/css (with user's css files)
+/fonts (with user's fonts)
+/images (with user's images)
+/src
+	/app 
+		/app.module.js (with user's js-files)
+		/vendor.js (with user's js-libs)
