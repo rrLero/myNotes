@@ -1,7 +1,7 @@
 ---
 preview: To start new project with WebPack
 title: WebPack - begins
-tags: JS, -----post-locked-by:rrLero
+tags: JS
 author: rrLero
 date: 2017-07-12 16:32:00
 ---
@@ -100,7 +100,7 @@ exports.root = root;
 exports.packageSort = packageSort;
 ```
 
-**webpack.common.js**
+**webpack.common.js** - common web-config for dev and production mode.
 
 ```
 const webpack = require('webpack');
@@ -219,7 +219,7 @@ module.exports = {
 };
 ```
 
-**webpack.dev.js**
+**webpack.dev.js** - runs in development mode
 
 ```
 const webpack = require('webpack');
@@ -257,7 +257,7 @@ module.exports = webpackMerge(commonConfig, {
 });
 ```
 
-**webpack.prod.js**
+**webpack.prod.js** - runs in production mode, creates /dist - folder
 
 ```
 const webpack = require('webpack');
@@ -361,6 +361,10 @@ Main folder should have such structure:
 /fonts (with user's fonts)
 /images (with user's images)
 /src
-	/app 
-		/app.module.js (with user's js-files)
-		/vendor.js (with user's js-libs)
+src/app 
+src/app.module.js (with user's js-files)
+src/vendor.js (with user's js-libs)
+
+**To develop type: ```npm start```**
+** build production: ``` npm run build-prod ```**
+**mplate include in such way: ```template: require('./public.html')```**
