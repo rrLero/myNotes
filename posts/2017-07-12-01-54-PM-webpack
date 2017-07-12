@@ -1,7 +1,7 @@
 ---
 preview: To start new project with WebPack
 title: WebPack - begins
-tags: JS, -----post-locked-by:rrLero
+tags: JS
 author: rrLero
 date: 2017-07-12 16:32:00
 ---
@@ -62,7 +62,9 @@ date: 2017-07-12 16:32:00
 * then input `npm i`
 
 * in the main folder create **/config** folder, which should contain such files:
+
 **helper.js**
+
 ```
 let path = require('path');
 
@@ -99,6 +101,7 @@ exports.packageSort = packageSort;
 ```
 
 **webpack.common.js**
+
 ```
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -217,6 +220,7 @@ module.exports = {
 ```
 
 **webpack.dev.js**
+
 ```
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
@@ -254,6 +258,7 @@ module.exports = webpackMerge(commonConfig, {
 ```
 
 **webpack.prod.js**
+
 ```
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
