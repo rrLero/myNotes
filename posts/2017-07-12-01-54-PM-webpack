@@ -1,7 +1,7 @@
 ---
 preview: To start new project with WebPack
 title: WebPack - begins
-tags: JS, -----post-locked-by:rrLero
+tags: JS
 author: rrLero
 date: 2017-07-12 16:32:00
 ---
@@ -367,4 +367,10 @@ src/vendor.js (with user's js-libs)
 
 **To develop type: ```npm start```**
 ** build production: ``` npm run build-prod ```**
-**mplate include in such way: ```template: require('./public.html')```**
+**Template include in such way: ```template: require('./public.html')```**
+**css import and images import** 
+
+```
+import '../../css/style.css';
+import '../../images/spinner.svg';
+```
