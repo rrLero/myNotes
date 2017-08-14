@@ -1,9 +1,9 @@
 ---
 preview: Example of angular animation
 title: Angular Animations 1
-tags: angular
+tags: angular, -----post-locked-by:rrLero
 author: rrLero
-date: 17-08-14 23:03
+date: 2017-08-14 23:03:00
 ---
 1. Need to import `import { trigger, state, style, animate, transition } from '@angular/animations';`
 
