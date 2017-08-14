@@ -1,0 +1,38 @@
+---
+preview: Creating Directive
+title: Directives in Angular
+tags: angular
+author: rrLero
+date: 17-08-14 21:39
+---
+1. If using Angular-cli `ng g directive directives/somename` or create by hand in  src/app/directives/somename.directive.ts ( don't forget import to app.module.ts )with such example content:
+
+```
+import { Directive, ElementRef, Renderer2, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appSomename]'
+})
+export class HighlightDirective {
+
+  constructor(private el: ElementRef,
+              private renderer: Renderer2) { }
+
+  @HostListener('mouseenter') onmouseenter() {
+    this.renderer.addClass(this.el.nativeElement, 'somename');
+  }
+
+  @HostListener('mouseleave') onmouseleave() {
+    this.renderer.removeClass(this.el.nativeElement, 'somename');
+  }
+
+}
+```
+
+2. add styles
+ 
+```
+.somename {}
+```
+
+3. Then only add in tags appSomename. Example: `<div appSomename></div>`
