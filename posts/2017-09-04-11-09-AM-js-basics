@@ -1,7 +1,7 @@
 ---
 preview: JS - my Reminder
 title: JS-reminder
-tags: JS, -----post-locked-by:rrLero
+tags: JS
 author: rrLero
 date: 2017-09-04 14:07:00
 ---
@@ -71,6 +71,3 @@ func.call(context, arg1, arg2, ...)
 Могу ли я написать эти функции таким образом, чтобы они всегда возвращали один и тот же результат для заданных входных данных?
 Уверен ли я, что мои функции не изменяют ничего лишнего?
 Если бы я хотел использовать эти функции в другой программе, мне нужно было бы внести изменения в них?
-
-
-Read more: http://lpgenerator.ru/blog/2016/03/31/vvedenie-v-funkcionalnoe-programmirovanie-na-javascript/#ixzz4tKJspUS6
