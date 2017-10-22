@@ -1,0 +1,16 @@
+---
+preview: # Falsy-List - to remember
+title: Falsy_List
+tags: JS
+author: rrLero
+date: 17-10-22 11:40
+---
+*  **undefined**
+ 
+* **null**
+
+*  **false**
+
+*  **+0, -0, and NaN**
+
+*  **""**
