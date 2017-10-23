@@ -1,0 +1,249 @@
+---
+preview: **Main of coercion**
+link to origin - https://www.safaribooksonline.com/library/view/you-dont-know/9781491905159/ch04.html
+title: Coercion
+tags: JS
+author: rrLero
+date: 17-10-23 12:01
+---
+**Converting Values**
+
+Converting a value from one type to another is often called “type casting,” when done explicitly, and “coercion” when done implicitly (forced by the rules of how a value is used).
+
+>NOTE
+It may not be obvious, but JavaScript coercions always result in one of the scalar primitive (see Chapter 2) values, like string, number, or boolean. There is no coercion that results in a complex value like object or function. Chapter 3 covers “boxing,” which wraps scalar primitive values in their object counterparts, but this is not really coercion in an accurate sense. 
+
+```
+var a = 42;
+
+var b = a + "";         // implicit coercion
+
+var c = String( a );    // explicit coercion
+```
+
+For b, the coercion that occurs happens implicitly, because the + operator combined with one of the operands being a string value ("") will insist on the operation being a string concatenation (adding two strings together), which as a (hidden) side effect will force the 42 value in a to be coerced to its string equivalent: "42".
+
+By contrast, the String(..) function makes it pretty obvious that it’s explicitly taking the value in a and coercing it to a string representation.
+
+Both approaches accomplish the same effect: "42" comes from 42. But it’s the how that is at the heart of the heated debates over JavaScript coercion.
+
+# Abstract Value Operations
+Before we can explore explicit versus implicit coercion, we need to learn the basic rules that govern how values become either a string, number, or boolean. The ES5 spec in section 9 defines several “abstract operations” (fancy spec-speak for “internal-only operation”) with the rules of value conversion. We will specifically pay attention to ToString, ToNumber, and ToBoolean, and to a lesser extent, ToPrimitive.
+
+**ToString**
+When any non-string value is coerced to a string representation, the conversion is handled by the ToString abstract operation in section 9.8 of the specification.
+
+Built-in primitive values have natural stringification: null becomes "null", undefined becomes "undefined", and true becomes "true". numbers are generally expressed in the natural way you’d expect, but as we discussed in Chapter 2, very small or very large numbers are represented in exponent form:
+
+```
+// multiplying `1.07` by `1000`, seven times over
+var a = 1.07 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000 * 1000;
+
+// seven times three digits => 21 digits
+a.toString(); // "1.07e21"
+```
+
+For regular objects, unless you specify your own, the default toString() (located in Object.prototype.toString()) will return the internal [[Class]] (see Chapter 3), like for instance "[object Object]".
+
+But as shown earlier, if an object has its own toString() method on it, and you use that object in a string-like way, its toString() will automatically be called, and the string result of that call will be used instead.
+
+Arrays have an overridden default toString() that stringifies as the (string) concatenation of all its values (each stringified themselves), with "," in between each value:
+
+```
+var a = [1,2,3];
+
+a.toString(); // "1,2,3"
+```
+
+**ToNumber**
+If any non-number value is used in a way that requires it to be a number, such as a mathematical operation, the ES5 spec defines the ToNumber abstract operation in section 9.3.
+
+For example, true becomes 1 and false becomes 0. undefined becomes NaN, but (curiously) null becomes 0.
+
+ToNumber for a string value essentially works for the most part like the rules/syntax for numeric literals (see Chapter 3). If it fails, the result is NaN (instead of a syntax error as with number literals). One difference is that 0-prefixed octal numbers are not handled as octals (just as normal base-10 decimals) in this operation, though such octals are valid as number literals (see Chapter 2).
+
+Consider:
+
+```
+var a = {
+    valueOf: function(){
+        return "42";
+    }
+};
+
+var b = {
+    toString: function(){
+        return "42";
+    }
+};
+
+var c = [4,2];
+c.toString = function(){
+    return this.join( "" ); // "42"
+};
+
+Number( a );                // 42
+Number( b );                // 42
+Number( c );                // 42
+Number( "" );               // 0
+Number( [] );               // 0
+Number( [ "abc" ] );        // NaN
+
+```
+
+ToBoolean
+Next, let’s have a little chat about how booleans behave in JS. There’s lots of confusion and misconception floating out there around this topic, so pay close attention!
+
+First and foremost, JS has actual keywords true and false, and they behave exactly as you’d expect of boolean values. It’s a common misconception that the values 1 and 0 are identical to true/false. While that may be true in other languages, in JS the numbers are numbers and the booleans are booleans. You can coerce 1 to true (and vice versa) or 0 to false (and vice versa). But they’re not the same.
+
+**Falsy values
+
+But that’s not the end of the story. We need to discuss how values other than the two booleans behave whenever you coerce to their boolean equivalent.
+
+All of JavaScript’s values can be divided into two categories:
+
+1. Values that will become false if coerced to boolean
+
+1. Everything else (which will obviously become true)
+
+I’m not just being facetious. The JS spec defines a specific, narrow list of values that will coerce to false when coerced to a boolean value.
+
+How do we know what the list of values is? In the ES5 spec, section 9.2 defines a ToBoolean abstract operation, which says exactly what happens for all the possible values when you try to coerce them “to boolean.”
+
+From that table, we get the following as the so-called “falsy” values list:
+
+* undefined
+* null
+* false
+* +0, -0, and NaN
+* ""
+
+That’s it. If a value is on that list, it’s a “falsy” value, and it will coerce to false if you force a boolean coercion on it.
+
+By logical conclusion, if a value is not on that list, it must be on another list, which we call the “truthy” values list. But JS doesn’t really define a “truthy” list per se. It gives some examples, such as saying explicitly that all objects are truthy, but mostly the spec just implies that anything not explicitly on the falsy list is therefore truthy.
+
+Falsy objects
+
+Wait a minute, that section title even sounds contradictory. I literally just said the spec calls all objects truthy, right? There should be no such thing as a “falsy object.”
+
+What could that possibly even mean?
+
+You might be tempted to think it means an object wrapper (see Chapter 3) around a falsy value (such as "", 0, or false). But don’t fall into that trap.
+
+>NOTE
+That’s a subtle specification joke some of you may get.
+
+Consider:
+
+```
+var a = new Boolean( false );
+var b = new Number( 0 );
+var c = new String( "" );
+```
+
+We know all three values here are objects (see Chapter 3) wrapped around obviously falsy values. But do these objects behave as true or as false? That’s easy to answer:
+
+```
+var d = Boolean( a && b && c );
+
+d; // true
+```
+
+>TIP
+Notice the way the Boolean( .. ) wrapped around the a && b && c expression—you might wonder why that’s there. We’ll come back to that later in this chapter, so make a mental note of it. For a sneak peek (trivia-wise), try for yourself what d will be if you just do d = a && b && c without the Boolean(..) call!
+
+So, if “falsy objects” are not just objects wrapped around falsy values, what the heck are they?
+
+The tricky part is that they can show up in your JS program, but they’re not actually part of JavaScript itself.
+
+What!?
+
+There are certain cases where browsers have created their own sort of exotic values behavior, namely this idea of “falsy objects,” on top of regular JS semantics.
+
+A “falsy object” is a value that looks and acts like a normal object (properties, etc.), but when you coerce it to a boolean, it coerces to a false value.
+
+Why!?
+
+The most well-known case is document.all, an array-like (object) provided to your JS program by the DOM (not the JS engine itself), which exposes elements in your page to your JS program. It used to behave like a normal object—it would act truthy. But not anymore.
+
+document.all itself was never really “standard” and has long since been deprecated/abandoned.
+
+# Explicit Coercion
+Explicit coercion refers to type conversions that are obvious and explicit. There’s a wide range of type conversion usage that clearly falls under the explicit coercion category for most developers.
+
+The goal here is to identify patterns in our code where we can make it clear and obvious that we’re converting a value from one type to another, so as to not leave potholes for future developers to trip into. The more explicit we are, the more likely someone later will be able to read our code and understand without undue effort what our intent was.
+
+It would be hard to find any salient disagreements with explicit coercion, as it most closely aligns with how the commonly accepted practice of type conversion works in statically typed languages. As such, we’ll take for granted (for now) that explicit coercion can be agreed upon to not be evil or controversial. We’ll revisit this later, though.
+
+**Explicitly: Strings <--> Numbers
+
+We’ll start with the simplest and perhaps most common coercion operation: coercing values between string and number representation.
+
+To coerce between strings and numbers, we use the built-in String(..) and Number(..) functions (which we referred to as “native constructors” in Chapter 3), but very importantly, we do not use the new keyword in front of them. As such, we’re not creating object wrappers.
+
+Instead, we’re actually explicitly coercing between the two types:
+
+```
+var a = 42;
+var b = String( a );
+
+var c = "3.14";
+var d = Number( c );
+
+b; // "42"
+d; // 3.14
+```
+
+String(..) coerces from any other value to a primitive string value, using the rules of the ToString operation discussed earlier. Number(..) coerces from any other value to a primitive number value, using the rules of the ToNumber operation discussed earlier.
+
+Besides String(..) and Number(..), there are other ways to “explicitly” convert these values between string and number:
+
+```
+var a = 42;
+var b = a.toString();
+
+var c = "3.14";
+var d = +c;
+
+b; // "42"
+d; // 3.14
+```
+
+>NOTE
+The generally accepted perspective in the open source JS community is that unary + is an accepted form of explicit coercion.
+
+The unary - operator also coerces like + does, but it also flips the sign of the number. However, you cannot put two (--) next to each other to unflip the sign, as that’s parsed as the decrement operator. Instead, you would need to do - -"3.14" with a space in between, and that would result in coercion to 3.14.
+
+You can probably dream up all sorts of hideous combinations of binary operators (like + for addition) next to the unary form of an operator. Here’s another crazy example:
+
+``` 1 + - + + + - + 1;  // 2 ```
+
+**Date to number
+
+Another common usage of the unary + operator is to coerce a Date object into a number, because the result is the Unix timestamp (milliseconds elapsed since 1 January 1970 00:00:00 UTC) representation of the date/time value:
+
+```
+var d = new Date( "Mon, 18 Aug 2014 08:53:06 CDT" );
+
++d; // 1408369986000
+```
+
+The most common usage of this idiom is to get the current now moment as a timestamp, such as:
+
+``` var timestamp = +new Date(); ```
+
+But coercion is not the only way to get the timestamp out of a Date object. A noncoercion approach is perhaps even preferable, as it’s even more explicit:
+
+```
+var timestamp = new Date().getTime();
+// var timestamp = (new Date()).getTime();
+// var timestamp = (new Date).getTime();
+```
+
+But an even more preferable noncoercion option is to use the Date.now() static function added in ES5:
+
+```
+var timestamp = Date.now();
+```
+
+I’d recommend skipping the coercion forms related to dates. Use Date.now() for current now timestamps, and new Date( .. ).getTime() for getting a timestamp of a specific non-now date/time that you need to specify.
