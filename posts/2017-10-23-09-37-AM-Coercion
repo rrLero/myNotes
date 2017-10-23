@@ -2,7 +2,7 @@
 preview: **Main of coercion**
 link to origin - https://www.safaribooksonline.com/library/view/you-dont-know/9781491905159/ch04.html
 title: Coercion
-tags: JS, -----post-locked-by:rrLero
+tags: JS
 author: rrLero
 date: 2017-10-23 12:01:00
 ---
@@ -55,6 +55,7 @@ var a = [1,2,3];
 a.toString(); // "1,2,3"
 ```
 
+
 **ToNumber**
 If any non-number value is used in a way that requires it to be a number, such as a mathematical operation, the ES5 spec defines the ToNumber abstract operation in section 9.3.
 
@@ -91,12 +92,15 @@ Number( [ "abc" ] );        // NaN
 
 ```
 
-ToBoolean
+
+**ToBoolean**
+
 Next, let’s have a little chat about how booleans behave in JS. There’s lots of confusion and misconception floating out there around this topic, so pay close attention!
 
 First and foremost, JS has actual keywords true and false, and they behave exactly as you’d expect of boolean values. It’s a common misconception that the values 1 and 0 are identical to true/false. While that may be true in other languages, in JS the numbers are numbers and the booleans are booleans. You can coerce 1 to true (and vice versa) or 0 to false (and vice versa). But they’re not the same.
 
-**Falsy values
+
+**Falsy values**
 
 But that’s not the end of the story. We need to discuss how values other than the two booleans behave whenever you coerce to their boolean equivalent.
 
@@ -122,7 +126,8 @@ That’s it. If a value is on that list, it’s a “falsy” value, and it will
 
 By logical conclusion, if a value is not on that list, it must be on another list, which we call the “truthy” values list. But JS doesn’t really define a “truthy” list per se. It gives some examples, such as saying explicitly that all objects are truthy, but mostly the spec just implies that anything not explicitly on the falsy list is therefore truthy.
 
-Falsy objects
+
+**Falsy objects**
 
 Wait a minute, that section title even sounds contradictory. I literally just said the spec calls all objects truthy, right? There should be no such thing as a “falsy object.”
 
@@ -175,7 +180,8 @@ The goal here is to identify patterns in our code where we can make it clear and
 
 It would be hard to find any salient disagreements with explicit coercion, as it most closely aligns with how the commonly accepted practice of type conversion works in statically typed languages. As such, we’ll take for granted (for now) that explicit coercion can be agreed upon to not be evil or controversial. We’ll revisit this later, though.
 
-**Explicitly: Strings <--> Numbers
+
+**Explicitly: Strings <--> Numbers**
 
 We’ll start with the simplest and perhaps most common coercion operation: coercing values between string and number representation.
 
@@ -218,7 +224,8 @@ You can probably dream up all sorts of hideous combinations of binary operators 
 
 ``` 1 + - + + + - + 1;  // 2 ```
 
-**Date to number
+
+**Date to number**
 
 Another common usage of the unary + operator is to coerce a Date object into a number, because the result is the Unix timestamp (milliseconds elapsed since 1 January 1970 00:00:00 UTC) representation of the date/time value:
 
