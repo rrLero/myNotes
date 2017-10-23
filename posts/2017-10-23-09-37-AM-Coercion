@@ -2,7 +2,7 @@
 preview: **Main of coercion**
 link to origin - https://www.safaribooksonline.com/library/view/you-dont-know/9781491905159/ch04.html
 title: Coercion
-tags: JS, -----post-locked-by:rrLero
+tags: JS
 author: rrLero
 date: 2017-10-23 12:01:00
 ---
@@ -10,8 +10,8 @@ date: 2017-10-23 12:01:00
 
 Converting a value from one type to another is often called “type casting,” when done explicitly, and “coercion” when done implicitly (forced by the rules of how a value is used).
 
->NOTE
-It may not be obvious, but JavaScript coercions always result in one of the scalar primitive (see Chapter 2) values, like string, number, or boolean. There is no coercion that results in a complex value like object or function. Chapter 3 covers “boxing,” which wraps scalar primitive values in their object counterparts, but this is not really coercion in an accurate sense. 
+>**NOTE**
+*It may not be obvious, but JavaScript coercions always result in one of the scalar primitive (see Chapter 2) values, like string, number, or boolean. There is no coercion that results in a complex value like object or function. Chapter 3 covers “boxing,” which wraps scalar primitive values in their object counterparts, but this is not really coercion in an accurate sense.*
 
 ```
 var a = 42;
@@ -144,8 +144,8 @@ What could that possibly even mean?
 
 You might be tempted to think it means an object wrapper (see Chapter 3) around a falsy value (such as "", 0, or false). But don’t fall into that trap.
 
->NOTE
-That’s a subtle specification joke some of you may get.
+>**NOTE**
+*That’s a subtle specification joke some of you may get.*
 
 Consider:
 
@@ -163,8 +163,8 @@ var d = Boolean( a && b && c );
 d; // true
 ```
 
->TIP
-Notice the way the Boolean( .. ) wrapped around the a && b && c expression—you might wonder why that’s there. We’ll come back to that later in this chapter, so make a mental note of it. For a sneak peek (trivia-wise), try for yourself what d will be if you just do d = a && b && c without the Boolean(..) call!
+>**TIP**
+*Notice the way the Boolean( .. ) wrapped around the a && b && c expression—you might wonder why that’s there. We’ll come back to that later in this chapter, so make a mental note of it. For a sneak peek (trivia-wise), try for yourself what d will be if you just do d = a && b && c without the Boolean(..) call!*
 
 So, if “falsy objects” are not just objects wrapped around falsy values, what the heck are they?
 
@@ -226,8 +226,8 @@ b; // "42"
 d; // 3.14
 ```
 
->NOTE
-The generally accepted perspective in the open source JS community is that unary + is an accepted form of explicit coercion.
+>**NOTE**
+*The generally accepted perspective in the open source JS community is that unary + is an accepted form of explicit coercion.*
 
 The unary - operator also coerces like + does, but it also flips the sign of the number. However, you cannot put two (--) next to each other to unflip the sign, as that’s parsed as the decrement operator. Instead, you would need to do - -"3.14" with a space in between, and that would result in coercion to 3.14.
 
@@ -300,8 +300,8 @@ if (!~a.indexOf( "ol" )) {  // true
 }
 ```
 
->Note
-The -(x+1) pseudo-algorithm for ~ would imply that ~-1 is -0, but actually it produces 0 because the underlying operation is bitwise, not mathematic.
+>**Note**
+*The -(x+1) pseudo-algorithm for ~ would imply that ~-1 is -0, but actually it produces 0 because the underlying operation is bitwise, not mathematic.*
 
 -------------------
 **Explicitly: Parsing Numeric Strings**
@@ -323,8 +323,8 @@ parseInt( b );  // 42
 
 Parsing a numeric value out of a string is tolerant of non-numeric characters—it just stops parsing left-to-right when encountered—whereas coercion is not tolerant and fails, resulting in the NaN value.
 
->Tip
-parseInt(..) has a twin, parseFloat(..), which (as it sounds) pulls out a floating-point number from a string.
+>**Tip**
+*parseInt(..) has a twin, parseFloat(..), which (as it sounds) pulls out a floating-point number from a string.*
 
 Don’t forget that parseInt(..) operates on string values. It makes absolutely no sense to pass a number value to parseInt(..). Nor would it make sense to pass any other type of value, like true, function(){..}, or [1,2,3].
 
@@ -447,8 +447,8 @@ If you’re paying close attention, you’ll notice that this operation is now i
 
 Let’s set aside those messy details and go back to an earlier, simplified explanation: if either operand to + is a string (or become one with the above steps!), the operation will be string concatenation. Otherwise, it’s always numeric addition.
 
->Note
-A commonly cited coercion gotcha is [] + {} versus {} + [], as those two expressions result, respectively, in "[object Object]" and 0. There’s more to it, though, and we cover those details in “Blocks”.
+>**Note**
+*A commonly cited coercion gotcha is [] + {} versus {} + [], as those two expressions result, respectively, in "[object Object]" and 0. There’s more to it, though, and we cover those details in “Blocks”.*
 
 What’s that mean for implicit coercion?
 
@@ -461,8 +461,8 @@ var b = a + "";
 b; // "42"
 ```
 
->Tip
-Numeric addition with the + operator is commutative, which means 2 + 3 is the same as 3 + 2. String concatenation with + is obviously not generally commutative, but with the specific case of "", it’s effectively commutative, as a + "" and "" + a will produce the same result.
+>**Tip**
+*Numeric addition with the + operator is commutative, which means 2 + 3 is the same as 3 + 2. String concatenation with + is obviously not generally commutative, but with the specific case of "", it’s effectively commutative, as a + "" and "" + a will produce the same result.*
 
 What about the other direction? How can we implicitly coerce from string to number?
 
@@ -569,7 +569,7 @@ So what *do* they result in? They result in the value of one (and only one) of t
 
 Quoting the ES5 spec from section 11.11:
 
->The value produced by a && or || operator is not necessarily of type Boolean. The value produced will always be the value of one of the two operand expressions.
+>*The value produced by a && or || operator is not necessarily of type Boolean. The value produced will always be the value of one of the two operand expressions.*
 
 Let’s illustrate:
 
@@ -609,8 +609,8 @@ a && b;
 a ? b : a;
 ```
 
->Note
-I call a || b “roughly equivalent” to a ? a : b because the outcome is identical, but there’s a nuanced difference. In a ? a : b, if a was a more complex expression (like for instance one that might have side effects like calling a function, etc.), then the a expression would possibly be evaluated twice (if the first evaluation was truthy). By contrast, for a || b, the a expression is evaluated only once, and that value is used both for the coercive test as well as the result value (if appropriate). The same nuance applies to the a && b and a ? b : a expressions.
+>**Note**
+*I call a || b “roughly equivalent” to a ? a : b because the outcome is identical, but there’s a nuanced difference. In a ? a : b, if a was a more complex expression (like for instance one that might have side effects like calling a function, etc.), then the a expression would possibly be evaluated twice (if the first evaluation was truthy). By contrast, for a || b, the a expression is evaluated only once, and that value is used both for the coercive test as well as the result value (if appropriate). The same nuance applies to the a && b and a ? b : a expressions.*
 
 An extremely common and helpful usage of this behavior, which there’s a good chance you may have used before and not fully understood, is:
 
@@ -739,8 +739,8 @@ If you’re comparing two values of different types, the performance isn’t the
 
 If you want coercion, use == loose equality, but if you don’t want coercion, use === strict equality.
 
->Note
-The implication here then is that both == and === check the types of their operands. The difference is in how they respond if the types don’t match.
+>**Note**
+*The implication here then is that both == and === check the types of their operands. The difference is in how they respond if the types don’t match.*
 
 ------------------------
 
@@ -748,8 +748,8 @@ The implication here then is that both == and === check the types of their opera
 
 The == operator’s behavior is defined as “The Abstract Equality Comparison Algorithm” in section 11.9.3 of the ES5 spec. What’s listed there is a comprehensive but simple algorithm that explicitly states every possible combination of types, and how the coercions (if necessary) should happen for each combination.
 
->Warning
-When (implicit) coercion is maligned as being too complicated and too flawed to be a useful good part, it is these rules of “abstract equality” that are being condemned. Generally, they are said to be too complex and too unintuitive for developers to practically learn and use, and that they are prone more to causing bugs in JS programs than to enabling greater code readability. I believe this is a flawed premise—that you readers are competent developers who write (and read and understand!) algorithms (aka code) all day long. So, what follows is a plain exposition of the “abstract equality” in simple terms. But I implore you to also read section 11.9.3 of the ES5 spec. I think you’ll be surprised at just how reasonable it is.
+>**Warning**
+*When (implicit) coercion is maligned as being too complicated and too flawed to be a useful good part, it is these rules of “abstract equality” that are being condemned. Generally, they are said to be too complex and too unintuitive for developers to practically learn and use, and that they are prone more to causing bugs in JS programs than to enabling greater code readability. I believe this is a flawed premise—that you readers are competent developers who write (and read and understand!) algorithms (aka code) all day long. So, what follows is a plain exposition of the “abstract equality” in simple terms. But I implore you to also read section 11.9.3 of the ES5 spec. I think you’ll be surprised at just how reasonable it is.*
 
 Basically, the first clause (11.9.3.1) says that if the two values being compared are of the same type, they are simply and naturally compared via Identity as you’d expect. For example, 42 is only equal to 42, and "abc" is only equal to "abc".
 
@@ -761,13 +761,13 @@ Some minor exceptions to normal expectation to be aware of:
 
 The final provision in clause 11.9.3.1 is for == loose equality comparison with objects (including functions and arrays). Two such values are only equal if they are both references to the exact same value. No coercion occurs here.
 
->Note
-The === strict equality comparison is defined identically to 11.9.3.1, including the provision about two object values. It’s a very little known fact that == and === behave identically in the case where two objects are being compared!
+>**Note**
+*The === strict equality comparison is defined identically to 11.9.3.1, including the provision about two object values. It’s a very little known fact that == and === behave identically in the case where two objects are being compared!*
 
 The rest of the algorithm in 11.9.3 specifies that if you use == loose equality to compare two values of different types, one or both of the values will need to be implicitly coerced. This coercion happens so that both values eventually end up as the same type, which can then directly be compared for equality using simple value Identity.
 
->Note
-The != loose not-equality operation is defined exactly as you’d expect, in that it’s literally the == operation comparison performed in its entirety, then the negation of the result. The same goes for the !== strict not-equality operation.
+>**Note**
+*The != loose not-equality operation is defined exactly as you’d expect, in that it’s literally the == operation comparison performed in its entirety, then the negation of the result. The same goes for the !== strict not-equality operation.*
 
 Comparing: strings to numbers
 
@@ -797,8 +797,8 @@ In the ES5 spec, clauses 11.9.3.4-5 say:
 
 1. *If Type(x) is String and Type(y) is Number, return the result of the comparison ToNumber(x) == y.*
 
->Warning
-The spec uses Number and String as the formal names for the types, while this book prefers number and string for the primitive types. Do not let the capitalization of Number in the spec confuse you for the Number() native function. For our purposes, the capitalization of the type name is irrelevant—they have basically the same meaning.
+>**Warning**
+*The spec uses Number and String as the formal names for the types, while this book prefers number and string for the primitive types. Do not let the capitalization of Number in the spec confuse you for the Number() native function. For our purposes, the capitalization of the type name is irrelevant—they have basically the same meaning.*
 
 Clearly, the spec says the "42" value is coerced to a number for the comparison. The how of that coercion has already been covered earlier, specifically with the ToNumber abstract operation. In this case, it’s quite obvious then that the resulting two 42 values are equal.
 
@@ -963,5 +963,5 @@ If an object/function/array is compared to a simple scalar primitive (string, nu
 
 1. *If Type(x) is Object and Type(y) is either String or Number, return the result of the comparison ToPrimitive(x) == y.*
 
->Note
-You may notice that these clauses only mention String and Number, but not Boolean. That’s because, as quoted earlier, clauses 11.9.3.6-7 take care of coercing any Boolean operand presented to a Number first.
+>**Note**
+*You may notice that these clauses only mention String and Number, but not Boolean. That’s because, as quoted earlier, clauses 11.9.3.6-7 take care of coercing any Boolean operand presented to a Number first.*
