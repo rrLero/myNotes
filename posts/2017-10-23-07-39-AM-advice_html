@@ -1,0 +1,14 @@
+---
+preview: *HTML - advices*
+title: Advices to HTML design
+tags: HTML
+author: rrLero
+date: 17-10-23 10:37
+---
+
+* 	valid HTML
+* 	minimize DOM manipulations
+* 	animate elements with "own layer"
+* 	scripts at the bottom
+* 	styles at the top
+* 	simplify CSS selectors
