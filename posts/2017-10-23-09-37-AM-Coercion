@@ -2,7 +2,7 @@
 preview: **Main of coercion**
 link to origin - https://www.safaribooksonline.com/library/view/you-dont-know/9781491905159/ch04.html
 title: Coercion
-tags: JS, -----post-locked-by:rrLero
+tags: JS
 author: rrLero
 date: 2017-10-23 12:01:00
 ---
@@ -965,3 +965,277 @@ If an object/function/array is compared to a simple scalar primitive (string, nu
 
 >**Note**
 *You may notice that these clauses only mention String and Number, but not Boolean. That’s because, as quoted earlier, clauses 11.9.3.6-7 take care of coercing any Boolean operand presented to a Number first.*
+
+Consider:
+
+```
+var a = 42;
+var b = [ 42 ];
+
+a == b; // true
+```
+
+The [ 42 ] value has its ToPrimitive abstract operation called (see “Abstract Value Operations”), which results in the "42" value. From there, it’s just "42" == 42, which as we’ve already covered becomes 42 == 42, so a and b are found to be coercively equal.
+
+In Chapter 3, we covered “unboxing,” where an object wrapper around a primitive value (like from new String("abc"), for instance) is unwrapped, and the underlying primitive value ("abc") is returned. This behavior is related to the ToPrimitive coercion in the == algorithm:
+
+```
+var a = "abc";
+var b = Object( a );    // same as `new String( a )`
+
+a === b;                // false
+a == b;                 // true
+```
+
+a == b is true because b is coerced (aka “unboxed,” unwrapped) via ToPrimitive to its underlying "abc" simple scalar primitive value, which is the same as the value in a.
+
+There are some values where this is not the case, though, because of other overriding rules in the == algorithm. 
+
+Consider:
+
+```
+var a = null;
+var b = Object( a );    // same as `Object()`
+a == b;                 // false
+
+var c = undefined;
+var d = Object( c );    // same as `Object()`
+c == d;                 // false
+
+var e = NaN;
+var f = Object( e );    // same as `new Number( e )`
+e == f;                 // false
+```
+
+The null and undefined values cannot be boxed—they have no object wrapper equivalent—so Object(null) is just like Object() in that both just produce a normal object.
+
+NaN can be boxed to its Number object wrapper equivalent, but when == causes an unboxing, the NaN == NaN comparison fails because NaN is never equal to itself (see Chapter 2).
+
+--------------------------
+
+**Edge Cases**
+
+Now that we’ve thoroughly examined how the implicit coercion of == loose equality works (in both sensible and surprising ways), let’s try to call out the worst, craziest corner cases so we can see what we need to avoid to not get bitten with coercion bugs.
+
+First, let’s examine how modifying the built-in native prototypes can produce crazy results:
+A number by any other value would…
+
+```
+Number.prototype.valueOf = function() {
+    return 3;
+};
+
+new Number( 2 ) == 3;   // true
+```
+
+>**Warning**
+*2 == 3 would not have fallen into this trap, because neither 2 nor 3 would have invoked the built-in Number.prototype.valueOf() method because both are already primitive number values and can be compared directly. However, new Number(2) must go through the ToPrimitive coercion, and thus invoke valueOf().*
+
+----------------------------------
+
+**The crazy ones**
+
+We don’t have to stop there, though. We can keep looking for even more troublesome coercions:
+
+```
+[] == ![];      // true
+```
+
+Oooo, that seems at a higher level of crazy, right!? Your brain may likely trick you that you’re comparing a truthy to a falsy value, so the true result is surprising, as we know a value can never be truthy and falsy at the same time!
+
+But that’s not what’s actually happening. Let’s break it down. What do we know about the ! unary operator? It explicitly coerces to a boolean using the ToBoolean rules (and it also flips the parity). So before [] == ![] is even processed, it’s actually already translated to [] == false. We already saw that form in our above list (false == []), so its surprise result is not new to us.
+
+How about other corner cases?
+
+```
+2 == [2];       // true
+"" == [null];   // true
+```
+
+As we said earlier in our ToNumber discussion, the righthand side [2] and [null] values will go through a ToPrimitive coercion so they can be more readily compared to the simple primitives (2 and "", respectively) on the lefthand side. Since the valueOf() for array values just returns the array itself, coercion falls to stringifying the array.
+
+[2] will become "2", which then is ToNumber coerced to 2 for the righthand side value in the first comparison. [null] just straight becomes "".
+
+So, 2 == 2 and "" == "" are completely understandable.
+
+If your instinct is to still dislike these results, your frustration is not actually with coercion like you probably think it is. It’s actually a complaint against the default array values’ ToPrimitive behavior of coercing to a string value. More likely, you’d just wish that [2].toString() didn’t return "2", or that [null].toString() didn’t return "".
+
+But what exactly should these string coercions result in? I can’t really think of any other appropriate string coercion of [2] than "2", except perhaps "[2]"—but that could be very strange in other contexts!
+
+Another famously cited gotcha:
+
+`0 == "\n";      // true`
+
+As we discussed earlier with empty "", "\n" (or " " or any other whitespace combination) is coerced via ToNumber, and the result is 0. What other number value would you expect whitespace to coerce to? Does it bother you that explicit Number(" ") yields 0?
+
+Really the only other reasonable number value that empty strings or whitespace strings could coerce to is NaN. But would that really be better? The comparison " " == NaN would of course fail, but it’s unclear that we’d have really fixed any of the underlying concerns.
+
+The chances that a real-world JS program fails because 0 == "\n" are awfully rare, and such corner cases are easy to avoid.
+
+To contrast against these 24 likely suspects for coercion gotchas, consider another list like this:
+
+```
+42 == "43";                         // false
+"foo" == 42;                        // false
+"true" == true;                     // false
+
+42 == "42";                         // true
+"foo" == [ "foo" ];                 // true
+```
+
+In these nonfalsy, noncorner cases (and there are literally an infinite number of comparisons we could put on this list), the coercion results are totally safe, reasonable, and explainable.
+
+------------------------
+
+The more prudent reaction would be to ask, “How can I use the countless good parts of coercion, but avoid the few bad parts?”
+
+Let’s look again at the bad list:
+
+```
+"0" == false;           // true -- UH OH!
+false == 0;             // true -- UH OH!
+false == "";            // true -- UH OH!
+false == [];            // true -- UH OH!
+"" == 0;                // true -- UH OH!
+"" == [];               // true -- UH OH!
+0 == [];                // true -- UH OH!
+```
+
+Four of the seven items on this list involve == false comparison, which we said earlier you should always, always avoid. That’s a pretty easy rule to remember.
+
+Now the list is down to three.
+
+```
+"" == 0;                // true -- UH OH!
+"" == [];               // true -- UH OH!
+0 == [];                // true -- UH OH!
+```
+
+Are these reasonable coercions you’d do in a normal JavaScript program? Under what conditions would they really happen?
+
+------------------------
+
+**Safely using implicit coercion**
+
+The most important advice I can give you: examine your program and reason about what values can show up on either side of an == comparison. To effectively avoid issues with such comparisons, here’s some heuristic rules to follow:
+
+* If either side of the comparison can have true or false values, don’t ever, EVER use ==.
+ 
+* If either side of the comparison can have [], "", or 0 values, seriously consider not using ==.
+
+In these scenarios, it’s almost certainly better to use === instead of ==, to avoid unwanted coercion. Follow those two simple rules and pretty much all the coercion gotchas that could reasonably hurt you will effectively be avoided.
+
+Being more explicit/verbose in these cases will save you from a lot of headaches.
+
+The question of == versus === is really appropriately framed as: should you allow coercion for a comparison or not?
+
+There’s lots of cases where such coercion can be helpful, allowing you to more tersely express some comparison logic (like with null and undefined, for example).
+
+>**Tip**
+*Another place where coercion is guaranteed not to bite you is with the typeof operator. typeof is always going to return you one of seven strings (see Chapter 1), and none of them are the empty "" string. As such, there’s no case where checking the type of some value is going to run afoul of implicit coercion. typeof x == "function" is 100% as safe and reliable as typeof x === "function". Literally, the spec says the algorithm will be identical in this situation. So, don’t just blindly use === everywhere simply because that’s what your code tools tell you to do, or (worst of all) because you’ve been told in some book to not think about it. You own the quality of your code.*
+
+Be a responsible and mature developer. Learn how to use the power of coercion (both explicit and implicit) effectively and safely. And teach those around you to do the same.
+
+![](https://www.safaribooksonline.com/library/view/you-dont-know/9781491905159/assets/tygr_0401.png)
+
+-------------------------
+
+**Abstract Relational Comparison**
+
+While this part of implicit coercion often gets a lot less attention, it’s important nonetheless to think about what happens with a < b comparisons (similar to how we just examined a == b in depth).
+
+The “Abstract Relational Comparison” algorithm in ES5 section 11.8.5 essentially divides itself into two parts: what to do if the comparison involves both string values (second half), or anything else (first half).
+
+>**Note**
+*The algorithm is only defined for a < b. So, a > b is handled as b < a.*
+
+The algorithm first calls ToPrimitive coercion on both values, and if the return result of either call is not a string, then both values are coerced to number values using the ToNumber operation rules, and compared numerically.
+
+For example:
+
+```
+var a = [ 42 ];
+var b = [ "43" ];
+
+a < b;  // true
+b < a;  // false
+```
+
+However, if both values are strings for the < comparison, simple lexicographic (natural alphabetic) comparison on the characters is performed:
+
+```
+var a = [ "42" ];
+var b = [ "043" ];
+
+a < b;  // false
+```
+
+a and b are not coerced to numbers, because both of them end up as strings after the ToPrimitive coercion on the two arrays. So, "42" is compared character by character to "043", starting with the first characters "4" and "0", respectively. Since "0" is lexicographically less than "4", the comparison returns false.
+
+The exact same behavior and reasoning goes for:
+
+```
+var a = [ 4, 2 ];
+var b = [ 0, 4, 3 ];
+
+a < b;  // false
+```
+
+Here, a becomes "4,2" and b becomes "0,4,3", and those lexicographically compare identically to the previous snippet.
+
+What about:
+
+```
+var a = { b: 42 };
+var b = { b: 43 };
+```
+
+a < b is also false, because a becomes [object Object] and b becomes [object Object], and so clearly a is not lexicographically less than b.
+
+But strangely:
+
+```
+var a = { b: 42 };
+var b = { b: 43 };
+
+a < b;  // false
+a == b; // false
+a > b;  // false
+
+a <= b; // true
+a >= b; // true
+```
+
+Why is a == b not true? They’re the same string value ("[object Object]"), so it seems they should be equal, right? Nope. Recall the previous discussion about how == works with object references.
+
+But then how are a <= b and a >= b resulting in true, if a < b and a == b and a > b are all false?
+
+Because the spec says for a <= b, it will actually evaluate b < a first, and then negate that result. Since b < a is also false, the result of a <= b is true.
+
+That’s probably awfully contrary to how you might have explained what <= does up to now, which would likely have been the literal “less than or equal to.” JS more accurately considers <= as “not greater than” (!(a > b), which JS treats as !(b < a)). Moreover, a >= b is explained by first considering it as b <= a, and then applying the same reasoning.
+
+Unfortunately, there is no “strict relational comparison” as there is for equality. In other words, there’s no way to prevent implicit coercion from occurring with relational comparisons like a < b, other than to ensure that a and b are of the same type explicitly before making the comparison.
+
+Use the same reasoning from our earlier == versus === sanity check discussion. If coercion is helpful and reasonably safe, like in a 42 < "43" comparison, use it. On the other hand, if you need to be safe about a relational comparison, explicitly coerce the values first, before using < (or its counterparts):
+
+```
+var a = [ 42 ];
+var b = "043";
+
+a < b;                      // false -- string comparison!
+Number( a ) < Number( b );  // true -- number comparison!
+```
+
+-----------------------
+
+**Review**
+
+In this chapter, we turned our attention to how JavaScript type conversions happen, called coercion, which can be characterized as either explicit or implicit.
+
+Coercion gets a bad rap, but it’s actually quite useful in many cases. An important task for the responsible JS developer is to take the time to learn all the ins and outs of coercion to decide which parts will help improve their code, and which parts they really should avoid.
+
+Explicit coercion is code where it is obvious that the intent is to convert a value from one type to another. The benefit is improvement in readability and maintainability of code by reducing confusion.
+
+Implicit coercion is coercion that is “hidden” as a side effect of some other operation, where it’s not as obvious that the type conversion will occur. While it may seem that implicit coercion is the opposite of explicit and is thus bad (and indeed, many think so!), actually implicit coercion is also about improving the readability of code.
+
+Especially for the implicit type, coercion must be used responsibly and consciously. Know why you’re writing the code you’re writing, and how it works. Strive to write code that others will easily be able to learn from and understand as well.
