@@ -1,0 +1,14 @@
+---
+preview: FP - Compose
+title: FP - Compose
+tags: JS
+author: rrLero
+date: 17-11-26 18:52
+---
+```
+const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)));
+const map = (func) => (el) => [].map.call(el, func);
+const fill = (filler) => (el) => [].fill.call(el, filler);
+const retRand = () => ({x: randomInteger(0, 20), y: randomInteger(0, 20)});
+const fillArrayByRandom = compose(map(retRand), fill(0));
+```
