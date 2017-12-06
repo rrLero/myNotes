@@ -1,14 +1,16 @@
 ---
 preview: Лекция по WebPack - по шагам
 title: WEBPACK
-tags: webpack, -----post-locked-by:rrLero
+tags: webpack
 author: rrLero
 date: 2017-12-06 13:29:00
 ---
 # 1. npm i -E -D webpack
 * -E - означает, что версии пакетов не будут изменятся на продакшене
-*
+
 * -D - означает dev-dependencies - пакеты которые используются для разработки и не нужны в продакшене.
+
+* - `package-lock.json` лочит версии сторонних пакетов - не игнорим его. 
 
 * После установки webpack - создаем папку `src` в которой будут лежать наши файлы проекта (сразу можно поместить `index.js`).
 
@@ -61,8 +63,8 @@ module.exports = {
 </html>
 ```
 
-----------------------------------------------
 Добавляем этот плагин в наш Конфиг.
+
 ```
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -109,4 +111,68 @@ module.exports = webpackMerge(commonConfig, {
 
 * `webpack.HotModuleReplacementPlugin()` - будет отслеживать изменения нашего кода.
 
-в package.json scripts описываем
+* Ставим веб-сервер ВебПака для онлайн просмотра результата
+`webpack-dev-server`
+
+в package.json scripts прописываем 
+
+```
+"start:dev": "webpack-dev-server --config config/webpack.config.dev.js"
+```
+
+- особо пояснений, думаю не надо.
+
+# 2. Babel
+Для того что-бы писать на последних стандартах JS и не боятся, что не все браузеры прочитают код, нам поможет Babel.
+
+Babel - переводит новые фичи js в формат 5 ECMA-script
+
+Устанавлмваем слкдующие пакеты:
+
+```
+        babel-core, 
+				babel-loader, 
+				babel-plugin-transform-flow-strip-types, 
+				babel-plugin-transform-object-rest-spread, 
+				babel-polyfill, 
+				babel-preset-env
+```
+
+Затем добавляем в основной конфиг в `entry`
+`['babel-polyfill', './src/index.js'],` - что будет позволять нам использовать самые новые фичи современных стандартов JS, а также 
+
+```
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /node_modules/,
+                include: path.resolve()
+            },
+        ]
+    }
+```
+
+это правило будет отлавливать все файлы с `.js` и прогонять их через babel-loader, на выходе получая нужную нам форму .js
+
+в директории где `package.json` создаем файл `.babelrc`
+
+```
+{
+    "presets": [
+        [
+            "env",
+            {
+                "targets": {
+                    "browsers": [
+                        "chrome 60"
+                    ]
+                }
+            }
+        ]
+    ]
+}
+```
+
+в `targets` мы указываем согласно каким стандартам будет трансформироваться наш код js. В данном примере стандарт который поддерживает  chrome 60
