@@ -1,15 +1,18 @@
 ---
 preview: Лекция по WebPack - по шагам
 title: WEBPACK
-tags: webpack, -----post-locked-by:rrLero
+tags: webpack
 author: rrLero
 date: 2017-12-06 13:29:00
 ---
 # 1. npm i -E -D webpack
 * -E - означает, что версии пакетов не будут изменятся на продакшене
+*
 * -D - означает dev-dependencies - пакеты которые используются для разработки и не нужны в продакшене.
 
-* После установки webpack - создаем папку `config` в которой будут лежать наши файлы конфига webpack.
+* После установки webpack - создаем папку `src` в которой будут лежать наши файлы проекта (сразу можно поместить `index.js`).
+
+* Также после установки webpack - создаем папку `config` в которой будут лежать наши файлы конфига webpack.
  
 * В папке `config` принято разделять файлы на ОСНОВНОЙ и ВСПОМОГАТЕЛЬНЫЕ (расширяют ОСНОВНОЙ)
 
@@ -39,7 +42,51 @@ module.exports = {
 ```
 где мы говорим, что webpack должен смотреть конфиг в такойто папке.
 
+* Перед каждым запуском build нам надо удалять папку dist, для этого ставим модуль
+`rimraf` и добавляем в `script`  `"build": "rimraf dist && webpack --config config/webpack.config.js"`
+
+-----------------------------------------
+
+* Добавим html - файл в наш проект для этого ставим плагин
+`html-webpack-plugin`, а сам файл `index.htm` помещаем в папку `src` и записываем ему минимальное содержание:
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebPack</title>
+</head>
+<body>
+</body>
+</html>
+```
+
+----------------------------------------------
+Добавляем этот плагин в наш Конфиг.
+```
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    entry: ['./src/index.js'],
+    output: {
+        filename: 'bundle.[hash].js',
+        path: path.resolve(__dirname, '../dist')
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            hash: true,
+            template: './src/index.html'
+        })
+    ],
+};
+```
+
+* Обязательно хэшируем файлы, что-бы браузер не заменял новые версии своими
+
+---------------------------------------------------
 * Далее мы для разработки создаем конфиг, `webpack.config.dev.js ` - который будет расширять основной конфиг (для этого устанавливаем вспомогательный пакет `webpack-merge`).
+
 ```
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
@@ -59,4 +106,7 @@ module.exports = webpackMerge(commonConfig, {
 
 все в принципе понятно, только небольшие пояснения - 
 * `source-map` - позволит нам видеть исходное состояние нашего кода, исключая всякие примеси. 
+
 * `webpack.HotModuleReplacementPlugin()` - будет отслеживать изменения нашего кода.
+
+в package.json scripts описываем
