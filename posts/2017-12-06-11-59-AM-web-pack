@@ -1,0 +1,62 @@
+---
+preview: Лекция по WebPack - по шагам
+title: WEBPACK
+tags: webpack
+author: rrLero
+date: 17-12-06 13:29
+---
+# 1. npm i -E -D webpack
+* -E - означает, что версии пакетов не будут изменятся на продакшене
+* -D - означает dev-dependencies - пакеты которые используются для разработки и не нужны в продакшене.
+
+* После установки webpack - создаем папку `config` в которой будут лежать наши файлы конфига webpack.
+ 
+* В папке `config` принято разделять файлы на ОСНОВНОЙ и ВСПОМОГАТЕЛЬНЫЕ (расширяют ОСНОВНОЙ)
+
+`webpack.config.js` - изначально будет иметь такое содержание - 
+
+```
+const path = require('path');
+
+module.exports = {
+    entry: ['./src/index.js'],
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, '../dist')
+    },
+};
+```
+
+где `entry` - точка входа
+и `output` - что получаем на выходе
+`__dirname` - текущая директория - прикол NodeJS
+
+и паралельно пишем в `package.json` 
+```
+    "scripts": {
+        "build": "webpack --config config/webpack.config.js"
+    },
+```
+где мы говорим, что webpack должен смотреть конфиг в такойто папке.
+
+* Далее мы для разработки создаем конфиг, `webpack.config.dev.js ` - который будет расширять основной конфиг (для этого устанавливаем вспомогательный пакет `webpack-merge`).
+```
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const commonConfig = require('./webpack.config');
+
+module.exports = webpackMerge(commonConfig, {
+    devtool: 'source-map',
+    plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ],
+    devServer: {
+        historyApiFallback: true,
+        stats: 'minimal'
+    }
+});
+```
+
+все в принципе понятно, только небольшие пояснения - 
+* `source-map` - позволит нам видеть исходное состояние нашего кода, исключая всякие примеси. 
+* `webpack.HotModuleReplacementPlugin()` - будет отслеживать изменения нашего кода.
