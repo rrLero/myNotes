@@ -1,9 +1,9 @@
 ---
 preview: Лекция по WebPack - по шагам
 title: WEBPACK
-tags: webpack
+tags: webpack, -----post-locked-by:rrLero
 author: rrLero
-date: 17-12-06 13:29
+date: 2017-12-06 13:29:00
 ---
 # 1. npm i -E -D webpack
 * -E - означает, что версии пакетов не будут изменятся на продакшене
