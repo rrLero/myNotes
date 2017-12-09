@@ -1,7 +1,7 @@
 ---
 preview: Лекция по WebPack - по шагам
 title: WEBPACK
-tags: webpack, -----post-locked-by:rrLero
+tags: webpack
 author: rrLero
 date: 2017-12-06 13:29:00
 ---
@@ -202,3 +202,33 @@ Babel - переводит новые фичи js в формат 5 ECMA-script
     },
 ```
 но надо помнить, что если будут одинаковые названия файлов с разными расширениями то webpack найдет первое совпадение и не будет искать дальше.
+
+# 4.a Flow
+
+* Что-бы настроить flow мы устанавливаем `flow-bin`
+* в `package.json` создаем `script` `"check": "flow check"` и перед запуском скрипта `build` или `dev` вставляем `npm run check`
+* в корне создаем файл `.flowconfig`
+
+```
+[ignore]
+
+[include]
+
+[libs]
+
+[options]
+```
+
+и в файлах, которые мы хотим проверять на типизацию перед основным кодом вставляем:
+
+```
+// @flow
+```
+
+* Что-бы работала `idea` - мы в выборе js окружения выбираем `flow` и там где путь указывае путь к файлу flow - в моем случае это:
+
+`/mnt/e6aaed64-0038-48fa-8387-afa14575de71/home/rrlero/WebstormProjects/SPD_HOMEWORKS/HW-TypeScript-Flow-OOP/node_modules/flow-bin/flow-linux64-v0.59.0/flow`
+
+* ЕСЛИ IDEA - НЕ НАЧАЛО ПОДСВЕЧИВАТЬ КОД БЕЗ ТИПИЗАЦИИ - надо попробовать поставить `flow` версией пониже текущей - в моем случае сработало.
+
+# 4.b TypeScript
