@@ -1,7 +1,7 @@
 ---
 preview: Лекция по WebPack - по шагам
 title: WEBPACK
-tags: webpack, -----post-locked-by:rrLero
+tags: webpack
 author: rrLero
 date: 2017-12-06 13:29:00
 ---
@@ -230,5 +230,21 @@ Babel - переводит новые фичи js в формат 5 ECMA-script
 `/mnt/e6aaed64-0038-48fa-8387-afa14575de71/home/rrlero/WebstormProjects/SPD_HOMEWORKS/HW-TypeScript-Flow-OOP/node_modules/flow-bin/flow-linux64-v0.59.0/flow`
 
 * ЕСЛИ IDEA - НЕ НАЧАЛО ПОДСВЕЧИВАТЬ КОД БЕЗ ТИПИЗАЦИИ - надо попробовать поставить `flow` версией пониже текущей - в моем случае сработало.
+
+* теперь если подключен `babel` - он начнет ругаться на непонятный для него код. Это решается установкой plugins для babel:
+`babel-plugin-transform-flow-strip-types`
+
+также дополнительно можно поставить plugin `babel-plugin-transform-object-rest-spread` -
+*This plugin allows Babel to transform rest properties for object destructuring assignment and spread properties for object literals.
+
+в `.babelrc` добавляем:
+
+```
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-flow-strip-types"
+  ],
+```
+
 
 # 4.b TypeScript
