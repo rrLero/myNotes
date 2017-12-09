@@ -1,7 +1,7 @@
 ---
 preview: Лекция по WebPack - по шагам
 title: WEBPACK
-tags: webpack, -----post-locked-by:rrLero
+tags: webpack
 author: rrLero
 date: 2017-12-06 13:29:00
 ---
@@ -235,7 +235,8 @@ Babel - переводит новые фичи js в формат 5 ECMA-script
 `babel-plugin-transform-flow-strip-types`
 
 также дополнительно можно поставить plugin `babel-plugin-transform-object-rest-spread` -
-*This plugin allows Babel to transform rest properties for object destructuring assignment and spread properties for object literals.
+
+>This plugin allows Babel to transform rest properties for object destructuring assignment and spread properties for object literals.
 
 в `.babelrc` добавляем:
 
