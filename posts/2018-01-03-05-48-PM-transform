@@ -1,0 +1,14 @@
+---
+preview: Animation
+Example Transform
+title: Transform CSS
+tags: CSS
+author: rrLero
+date: 18-01-03 19:45
+---
+Transform не меняет положение элемента - меняет только его отображение.
+
+```
+transform: translateX(452px) scale(1.5) rotate(45deg);
+transition: transform 500ms;
+```
