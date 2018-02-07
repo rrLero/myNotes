@@ -1,9 +1,9 @@
 ---
 preview: # Начало работы с реактом и редаксом. Part-1 - Окружение
 title: React Redux Start
-tags: React, Redux
+tags: React, Redux, -----post-locked-by:rrLero
 author: rrLero
-date: 18-02-07 11:52
+date: 2018-02-07 11:52:00
 ---
 
 1. Packafe.json - лучше все установить через npm i -E ... что-бы сохранить последовательность алфафита.
