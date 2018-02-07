@@ -1,11 +1,10 @@
 ---
 preview: # Начало работы с реактом и редаксом. Part-1 - Окружение
 title: React Redux Start
-tags: React, Redux, -----post-locked-by:rrLero
+tags: React, Redux
 author: rrLero
 date: 2018-02-07 11:52:00
 ---
-
 1. Packafe.json - лучше все установить через npm i -E ... что-бы сохранить последовательность алфафита.
 
 ```
@@ -61,7 +60,7 @@ date: 2018-02-07 11:52:00
 
 2. Настраиваем папку config 
 
-**webpack.config.js
+**webpack.config.js**
 
 ```
 const path = require('path');
@@ -141,7 +140,7 @@ module.exports = {
 };
 ```
 
-**webpack.config.dev.js
+**webpack.config.dev.js**
 
 ```
 const webpack = require('webpack');
@@ -160,7 +159,7 @@ module.exports = webpackMerge(commonConfig, {
 });
 ```
 
-**webpack.config.prod.js
+**webpack.config.prod.js**
 
 ```
 const webpackMerge = require('webpack-merge');
@@ -186,7 +185,7 @@ module.exports = webpackMerge(commonConfig, {
 });
 ```
 
-**3. Настраиваем babel .babelrc
+**3. Настраиваем babel .babelrc**
 
 ```
 {
@@ -212,7 +211,7 @@ module.exports = webpackMerge(commonConfig, {
 }
 ```
 
-**4. Flow .flowconfig
+**4. Flow .flowconfig**
 
 ```
 [ignore]
@@ -228,7 +227,7 @@ module.system=haste
 unsafe.enable_getters_and_setters=true
 ```
 
-**5. flow-typed/global.js
+**5. flow-typed/global.js**
 
 ```
 declare module Stub {
@@ -236,7 +235,7 @@ declare module Stub {
 }
 ```
 
-**6. Дерево директорий 
+**6. Дерево директорий **
 
 ```
 src
@@ -250,7 +249,7 @@ src
 		typedef.js
 ```
 
-**7. index.html
+**7. index.html**
 
 ```
 <!DOCTYPE html>
@@ -270,7 +269,7 @@ src
 </html>
 ```
 
-**8. index.js
+**8. index.js**
 
 ```
 // @flow
@@ -292,4 +291,4 @@ if (root !== null) {
 }
 ```
 
-**9. Далее каждая папочка с компонентом содержит файл index.js and styles.less + картинки
+**9. Далее каждая папочка с компонентом содержит файл index.js and styles.less + картинки**
