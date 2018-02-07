@@ -1,0 +1,124 @@
+---
+preview: # Подключение Redux
+title: Redux, React. Part - 2
+tags: React,Redux
+author: rrLero
+date: 18-02-07 12:10
+---
+1. В папке Store создаем 4 файла
+
+**index.js**
+
+```
+import configureStore from './configureStore';
+
+const store = configureStore();
+
+export default store;
+```
+
+**configureStore.js**
+
+```
+if (process.env.NODE_ENV === 'production') {
+    module.exports = require('./configureStore.prod.js');
+} else if (process.env.NODE_ENV === 'development') {
+    module.exports = require('./configureStore.dev.js');
+} else {
+    throw new Error('Unrecognized node environment');
+}
+```
+
+**configureStore.dev.js**
+```
+import {createStore, applyMiddleware, compose} from 'redux';
+import {createLogger} from 'redux-logger';
+import thunk from 'redux-thunk';
+import api from '../api';
+import rootReducer from '../reducers';
+
+export default function configureStore(preloadedState) {
+    const store = createStore(
+        rootReducer,
+        preloadedState,
+        compose(
+            applyMiddleware(thunk, api, createLogger({
+                duration: true
+            })),
+            window.devToolsExtension ? window.devToolsExtension() : f => f
+        )
+    );
+
+    if (module.hot) {
+        // Enable Webpack hot module replacement for reducers
+        module.hot.accept('../reducers', () => {
+            const nextRootReducer = require('../reducers/index').default;
+            store.replaceReducer(nextRootReducer);
+        });
+    }
+
+    return store;
+}
+
+```
+
+
+**configureStore.prod.js**
+```
+import {createStore, applyMiddleware, compose} from 'redux';
+import thunk from 'redux-thunk';
+import api from '../api';
+import rootReducer from '../reducers';
+
+export default function configureStore(preloadedState) {
+    return createStore(
+        rootReducer,
+        preloadedState,
+        compose(applyMiddleware(thunk, api))
+    );
+}
+```
+
+таким образом подключаем store к нашему проекту, оборачивая все в Provider.
+
+```
+// @flow
+
+import React, {Component} from 'react';
+import {Provider} from 'react-redux';
+import './styles.less';
+
+import {BrowserRouter, Route, Switch, NavLink} from 'react-router-dom';
+
+import store from '../store';
+
+class App extends Component<{}> {
+    render() {
+        return (
+            <Provider store={store}>
+                <BrowserRouter>
+										...
+                </BrowserRouter>
+            </Provider>
+        );
+    }
+}
+
+export default App;
+```
+
+**В папке reducers создаем index.js**
+
+```
+// @flow
+
+import {combineReducers} from 'redux';
+
+import usageStatistics from '../routes/usage-statistics/reducers';
+import sortUsageStatistics from '../routes/usage-statistics/table/reducers';
+
+export default combineReducers({
+    nameOfMyReducer1,
+    nameOfMyReducer2
+});
+```
