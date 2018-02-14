@@ -1,0 +1,70 @@
+---
+preview: # Must Have
+title: Optimize-Web
+tags: Web Optimization
+author: rrLero
+date: 18-02-14 22:31
+---
+**Must Have**
+
+1. Use CDN
+1. JS - bottom, CSS - top
+1. Add expires or cache control to Headers
+1. GZIP components
+1. avoid CSS expressions
+1. external JS and CSS
+1. reduce DNS lookup
+1. minify JS/CSS
+1. avoid filters
+1. post/pre load components
+1. reduce number of DOM els
+1. split components across  domains
+1. minimize the # of iframes
+1. 404s
+1. reduce cookie size
+1. cookie free domains for components
+1. minimize DOM access
+1. keep components under 25K
+1. avoid empty image src
+1. reduce redirects
+1. remove duplicate scripts
+1. configure ETags
+1. cache AJAX
+1. optimize images
+1. optimize sprites
+1. don't scale images
+1. small and cacheable favicons
+1. choose <link> over @import
+
+https://developer.yahoo.com/performance/rules.html 
+
+**CHECKLIST**
+
+* Avoid landing page redirects
+* Enable compression
+* Improve server response time
+* Leverage browser caching
+* Minify resources
+* Optimize images
+* Optimize CSS Delivery
+* Prioritize visible content
+* Remove render-blocking JavaScript
+* Use asynchronous scripts
+
+https://developers.google.com/speed/docs/insights/rules
+
+**TOOLS**
+
+* network/timeline in browser’s debug tool
+ 
+* page speed
+ 
+* SpeedCurve.com
+ 
+* webpagetest.org
+
+* Google Insights
+
+* http://tools.pingdom.com/
+ 
+* http://mobitest.akamai.com/
