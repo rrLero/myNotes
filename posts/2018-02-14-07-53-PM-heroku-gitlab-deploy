@@ -1,0 +1,111 @@
+---
+preview: # To setup CI you need:
+title: Heroku Deploy GitLab Project
+tags: heroku
+author: rrLero
+date: 18-02-14 21:15
+---
+**1. На Heroku создаем новое APP. В Accaunt Setting запоминаем API-Key.**
+
+**2. В package.json scripts будет выглядеть приблизительно так: **
+
+```
+"scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.config.dev.js",
+    "build": "rimraf dist && cross-env NODE_ENV=production webpack --config config/webpack.config.js",
+    "prod": "rimraf dist && cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js",
+    "flow-typed": "rimraf flow-typed/npm && flow-typed install",
+    "check:flow": "flow check",
+    "check": "npm run check:flow && npm run test && npm run lint",
+    "start": "npm run prod && node ./app.js",
+    "lint": "echo lint",
+    "test": "echo test"
+  },
+```
+	
+**3.	Heroku запустит скрипт start, который запустит script prod и сервер Express**
+	
+```	
+const express = require('express');
+const app = express();
+
+app.use('/', express.static(__dirname + '/dist'));
+
+app.get('/*', function(req,res){
+    res.sendFile(__dirname + '/dist/index.html');
+});
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`App available on ${port}`);
+});
+```
+
+app.get - это для того что-бы работал routing
+
+**4. На GitLab - выбираем Settings/CI-CD/SecretVariables - и прописываем переменную HEROKU_API_KEY**
+
+**5. .gitlab-ci.yml** -
+
+```
+image: node:latest
+
+stages:
+  - test
+  - deploy
+
+check:
+  stage: test
+  script:
+    - npm install
+    - npm run check
+
+deploy_stagging:
+  stage: deploy
+  image: ruby:latest
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=name-of-project-on-heroku --api-key=$HEROKU_API_KEY
+```
+
+stages - это описываем какие stage пройдет все приложение после коммита.
+
+check - это job который является частью стейджа test и выполняет скрипты
+
+deploy_stagging - это job который является частью стейджа deploy и выполняет скрипты, dpl - это рубисткая прога, которая коннектит heroku к gitlab
+
+**6. Что-бы настроить деплой по кнопке дописываем в конец файла пару строчек**
+
+```
+image: node:latest
+
+stages:
+  - test
+  - deploy
+
+check:
+  stage: test
+  script:
+    - npm install
+    - npm run check
+
+
+deploy_stagging:
+  stage: deploy
+  image: ruby:latest
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=react-project-deploy-prod --api-key=$HEROKU_API_KEY
+  when: manual
+  only:
+    - deploy-prod
+```
+
+**7. Подключаем Slack**
+
+Settings/Integration/Project services - выбираем Slack notifications - и висываем туда url вебхука который берем отсюда (пример) https://react-project-rrlero.slack.com/apps/new/A0F7XDUAZ-incoming-webhooks). - надо быть админом канала.
