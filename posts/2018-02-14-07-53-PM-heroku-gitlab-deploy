@@ -1,9 +1,9 @@
 ---
 preview: # To setup CI you need:
 title: Heroku Deploy GitLab Project
-tags: heroku
+tags: heroku, -----post-locked-by:rrLero
 author: rrLero
-date: 18-02-14 21:15
+date: 2018-02-14 21:15:00
 ---
 **1. На Heroku создаем новое APP. В Accaunt Setting запоминаем API-Key.**
 
