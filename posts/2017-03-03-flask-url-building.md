@@ -1,7 +1,7 @@
 ---
 preview: Как построить URL во Фласке
 title: Как построить урл во Фласк
-tags: flask
+tags: flask, -----post-locked-by:rrLero
 author: rrLero
 date: 2017-03-03 22:48:00
 ---
