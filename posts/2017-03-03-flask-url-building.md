@@ -1,12 +1,10 @@
 ---
 preview: Как построить URL во Фласке
 title: Как построить урл во Фласк
-tags: flask, -----post-locked-by:rrLero
+tags: flask-test
 author: rrLero
 date: 2017-03-03 22:48:00
 ---
-
-
 ```
 from flask import Flask, url_for
 app = Flask(__name__)
