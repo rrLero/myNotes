@@ -1,7 +1,7 @@
 ---
 preview: # To setup CI you need:
 title: Heroku Deploy GitLab Project
-tags: heroku, -----post-locked-by:rrLero
+tags: heroku
 author: rrLero
 date: 2018-02-14 21:15:00
 ---
@@ -27,18 +27,20 @@ date: 2018-02-14 21:15:00
 	
 ```	
 const express = require('express');
+const path = require('path');
+
 const app = express();
 
-app.use('/', express.static(__dirname + '/dist'));
+app.use('/', express.static(path.join(__dirname, 'dist')));
 
-app.get('/*', function(req,res){
-    res.sendFile(__dirname + '/dist/index.html');
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/dist/index.html'));
 });
 
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-    console.log(`App available on ${port}`);
+    console.log(`App available on ${port}`); // eslint-disable-line no-console
 });
 ```
 
@@ -54,6 +56,7 @@ image: node:latest
 stages:
   - test
   - deploy
+  - deploy-prod
 
 check:
   stage: test
@@ -68,33 +71,12 @@ deploy_stagging:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=name-of-project-on-heroku --api-key=$HEROKU_API_KEY
-```
+    - dpl --provider=heroku --app=react-project-deploy --api-key=$HEROKU_API_KEY
+  only:
+    - deploy
 
-stages - это описываем какие stage пройдет все приложение после коммита.
-
-check - это job который является частью стейджа test и выполняет скрипты
-
-deploy_stagging - это job который является частью стейджа deploy и выполняет скрипты, dpl - это рубисткая прога, которая коннектит heroku к gitlab
-
-**6. Что-бы настроить деплой по кнопке дописываем в конец файла пару строчек**
-
-```
-image: node:latest
-
-stages:
-  - test
-  - deploy
-
-check:
-  stage: test
-  script:
-    - npm install
-    - npm run check
-
-
-deploy_stagging:
-  stage: deploy
+deploy-prod_stagging:
+  stage: deploy-prod
   image: ruby:latest
   script:
     - apt-get update -qy
@@ -104,8 +86,23 @@ deploy_stagging:
   when: manual
   only:
     - deploy-prod
+
 ```
 
-**7. Подключаем Slack**
+**stages** - это описываем какие stage пройдет все приложение после коммита.
+
+**check** - это job который является частью стейджа test и выполняет скрипты
+
+**deploy_stagging** - это job который является частью стейджа deploy и выполняет скрипты, dpl - это рубисткая прога, которая коннектит heroku к gitlab
+
+**deploy-prod_stagging** - это job который является частью стейджа deploy-prod и выполняет скрипты, dpl - это рубисткая прога, которая коннектит heroku к gitlab
+
+в данном кофиге: 
+
+* Mater - runs tests
+* Deploy - runs test and deploy app to Heroku
+* Deploy-prod - runs tests and creates button 'deploy-to heroku'
+
+**6. Подключаем Slack**
 
 Settings/Integration/Project services - выбираем Slack notifications - и висываем туда url вебхука который берем отсюда (пример) https://react-project-rrlero.slack.com/apps/new/A0F7XDUAZ-incoming-webhooks). - надо быть админом канала.
