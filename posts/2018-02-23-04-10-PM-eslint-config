@@ -1,9 +1,9 @@
 ---
 preview: # Eslint - to start
 title: Eslint - to setup enviroment
-tags: eslint
+tags: eslint, -----post-locked-by:rrLero
 author: rrLero
-date: 18-02-23 17:57
+date: 2018-02-23 17:57:00
 ---
 **1. `npm i -D -E eslint` - понятно**
 **2. `npm i -D -E babel-eslint` - понятно**
