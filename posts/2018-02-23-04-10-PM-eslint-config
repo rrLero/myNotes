@@ -1,7 +1,7 @@
 ---
 preview: # Eslint - to start
 title: Eslint - to setup enviroment
-tags: eslint, -----post-locked-by:rrLero
+tags: eslint
 author: rrLero
 date: 2018-02-23 17:57:00
 ---
@@ -181,4 +181,4 @@ Settings/Language & FrameWorks/JS/Code Quality/ESLint - enabled
 
 **11. Usefull hacks**
 to disable rule in whole document: `/*eslint-disable no-console */`
-to disable rule in one line of document: `eslint-disable-line flowtype/no-weak-types`
+to disable rule in one line of document: `//eslint-disable-line flowtype/no-weak-types`
