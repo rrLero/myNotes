@@ -1,9 +1,9 @@
 ---
 preview: # Jest - Testing
 title: Jest
-tags: jest
+tags: jest, -----post-locked-by:rrLero
 author: rrLero
-date: 18-02-24 12:01
+date: 2018-02-24 12:01:00
 ---
 **1. npm i -E -D jest**
 
