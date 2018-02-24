@@ -1,7 +1,7 @@
 ---
 preview: # Jest - Testing
 title: Jest
-tags: jest, -----post-locked-by:rrLero
+tags: jest
 author: rrLero
 date: 2018-02-24 12:01:00
 ---
@@ -23,7 +23,28 @@ date: 2018-02-24 12:01:00
 **4. В package.json дописываем**
 `"check:test": "jest"`
 
-**5. Пример написания теста**
+**5. In config create folder jest**, and then put rhere two files:
+
+`dumb-mock.js`
+
+```
+module.exports = {};
+```
+
+and 
+
+`test-framework-setup.js`
+
+```
+const Enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-16');
+
+Enzyme.configure({adapter: new Adapter()});
+```
+
+and install `enzyme` and `enzyme-adapter-react-16`
+
+**6. Пример написания теста**
 
 Допустим есть функция fullName в fullName.js:
 
