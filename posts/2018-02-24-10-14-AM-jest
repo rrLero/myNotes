@@ -1,0 +1,85 @@
+---
+preview: # Jest - Testing
+title: Jest
+tags: jest
+author: rrLero
+date: 18-02-24 12:01
+---
+**1. npm i -E -D jest**
+
+**2. В Package.json дописываем конфигурацию для jest**
+
+```
+"jest": {
+        "setupTestFrameworkScriptFile": "./config/jest/test-framework-setup.js",
+        "moduleNameMapper": {
+            "\\.(styl)$": "<rootDir>/config/jest/dumb-mock.js"
+        }
+    }
+```
+
+**3. Папки с тестами называем __tests__** - jest будет искать такие папки
+
+**4. В package.json дописываем**
+`"check:test": "jest"`
+
+**5. Пример написания теста**
+
+Допустим есть функция fullName в fullName.js:
+
+```
+// @flow
+
+type User = {
+    firstName?: string,
+    lastName?: string,
+    login: string
+};
+
+export default (user: User) => {
+    if (user.firstName && user.lastName) {
+        return `${user.firstName} ${user.lastName}`;
+    }
+    return user.firstName || user.lastName || user.login;
+};
+```
+
+создаем директорию __tests__ куда помещаем файл `fullName.tests.js`
+
+```
+import fullName from '../fullName';
+
+describe('fullName', () => {
+    it('Should return "firstName lastName" if both exist', () => {
+        const user = {
+            firstName: 'Leonid',
+            lastName: 'Baida',
+            login: 'leonid.baida@gmail.com'
+        };
+        expect(fullName(user)).toEqual('Leonid Baida');
+    });
+
+    it('Should return "firstName" if lastName is missed', () => {
+        const user = {
+            firstName: 'Leonid',
+            login: 'leonid.baida@gmail.com'
+        };
+        expect(fullName(user)).toEqual('Leonid');
+    });
+
+    it('Should return "lastName" if firstName is missed', () => {
+        const user = {
+            lastName: 'Baida',
+            login: 'leonid.baida@gmail.com'
+        };
+        expect(fullName(user)).toEqual('Baida');
+    });
+
+    it('Should return "login" if both names (first and last) are missed', () => {
+        const user = {
+            login: 'leonid.baida@gmail.com'
+        };
+        expect(fullName(user)).toEqual('leonid.baida@gmail.com');
+    });
+});
+```
