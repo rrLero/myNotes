@@ -1,7 +1,7 @@
 ---
 preview: # Jest - Testing
 title: Jest
-tags: jest, -----post-locked-by:rrLero
+tags: jest
 author: rrLero
 date: 2018-02-24 12:01:00
 ---
@@ -101,6 +101,78 @@ describe('fullName', () => {
             login: 'leonid.baida@gmail.com'
         };
         expect(fullName(user)).toEqual('leonid.baida@gmail.com');
+    });
+});
+```
+
+Пример Тестирования Компонента:
+```
+import React from 'react';
+import {mount} from 'enzyme';
+import PaginationStrip from '../index';
+import Pagination from '../../pagination';
+
+describe('PaginationStrip', () => {
+    const currentPage = 1;
+    const totalCount = 350;
+
+    it('should be callback on change in select that return current page and items per page', () => {
+        let current = null;
+        let itemsPerPage = null;
+        const callback = jest.fn((curr, items) => {
+            current = curr;
+            itemsPerPage = items;
+        });
+
+        const component = mount(
+            <PaginationStrip totalCount={totalCount} currentPage={4} onChange={callback}/>
+        );
+
+        component.find('select').simulate('change', {target: {value: 250}});
+
+        expect(callback).toHaveBeenCalled();
+        expect(current).toEqual(1);
+        expect(itemsPerPage).toEqual(250);
+    });
+
+    it('should be callback on change current page in pagination-strip', () => {
+        const callback = jest.fn();
+        const component = mount(
+            <PaginationStrip totalCount={totalCount} currentPage={2} onChange={callback}/>
+        );
+
+        component.find(Pagination).find('a').first().simulate('click');
+
+        expect(callback).toHaveBeenCalledWith(1, 10);
+    });
+
+    describe('max page size', () => {
+        it('should be 3 items in select in case if total count is equal to 24', () => {
+            const count = 24;
+            const component = mount(
+                <PaginationStrip totalCount={count} currentPage={currentPage}/>
+            );
+
+            expect(component.find('select option').length).toEqual(3);
+        });
+
+        it('should be 3 items in select in case if total count is equal to 25', () => {
+            const count = 25;
+            const component = mount(
+                <PaginationStrip totalCount={count} currentPage={currentPage}/>
+            );
+
+            expect(component.find('select option').length).toEqual(3);
+        });
+
+        it('should be 4 items in select in case if total count is equal to 26', () => {
+            const count = 26;
+            const component = mount(
+                <PaginationStrip totalCount={count} currentPage={currentPage}/>
+            );
+
+            expect(component.find('select option').length).toEqual(4);
+        });
     });
 });
 ```
