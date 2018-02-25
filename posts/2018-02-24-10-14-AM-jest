@@ -1,7 +1,7 @@
 ---
 preview: # Jest - Testing
 title: Jest
-tags: jest, -----post-locked-by:rrLero
+tags: jest
 author: rrLero
 date: 2018-02-24 12:01:00
 ---
@@ -18,7 +18,7 @@ date: 2018-02-24 12:01:00
     }
 ```
 
-**3. Папки с тестами называем __tests__** - jest будет искать такие папки
+**3. Папки с тестами называем `__tests__`** - jest будет искать такие папки
 
 **4. В package.json дописываем**
 `"check:test": "jest"`
