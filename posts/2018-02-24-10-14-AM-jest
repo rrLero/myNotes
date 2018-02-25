@@ -1,7 +1,7 @@
 ---
 preview: # Jest - Testing
 title: Jest
-tags: jest, -----post-locked-by:rrLero
+tags: jest
 author: rrLero
 date: 2018-02-24 12:01:00
 ---
@@ -65,7 +65,7 @@ export default (user: User) => {
 };
 ```
 
-создаем директорию __tests__ куда помещаем файл `fullName.tests.js`
+создаем директорию `__tests__` куда помещаем файл `fullName.tests.js`
 
 ```
 import fullName from '../fullName';
