@@ -1,0 +1,14 @@
+---
+preview: **How many times a day do you write this import statement?**
+title: Never `import React from ‘react’` again, thanks to Webpack’s ProvidePlugin
+tags: JS
+author: rrLero
+date: 18-03-09 21:46
+---
+```
+    new webpack.ProvidePlugin({
+      'React':     'react'
+    })
+```
+
+When Webpack builds your JavaScript, it will load the ‘react’ module whenever the identifier ‘React’ is declared in your code.
