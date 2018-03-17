@@ -1,22 +1,22 @@
 ---
 preview: **Ramda some samples:**
 title: ramda
-tags: FP, -----post-locked-by:rrLero
+tags: FP
 author: rrLero
 date: 2018-03-17 22:42:00
 ---
 **Find Index of element in array by prop path**
 
 ```
-				const zipWithIndex = addIndex(map)(pair);
-        const pathEqualId = pathEq(['_id', '$oid'], 'someidofelement');
-        const hfIndices = pipe(
-            zipWithIndex,
-            filter(pipe(head, pathEqualId)),
-            map(nth(1)),
-            head
-        );
-        const index = hfIndices(state[action.from]);
+const zipWithIndex = addIndex(map)(pair);
+const pathEqualId = pathEq(['_id', '$oid'], 'someidofelement');
+const hfIndices = pipe(
+		zipWithIndex,
+		filter(pipe(head, pathEqualId)),
+		map(nth(1)),
+		head
+);
+const index = hfIndices(state[action.from]);
 ```
 
 **Take Deep Prop**
