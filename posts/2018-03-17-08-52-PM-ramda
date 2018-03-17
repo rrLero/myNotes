@@ -1,0 +1,31 @@
+---
+preview: **Ramda some samples:**
+title: ramda
+tags: FP
+author: rrLero
+date: 18-03-17 22:42
+---
+**Find Index of element in array by prop path**
+
+```
+				const zipWithIndex = addIndex(map)(pair);
+        const pathEqualId = pathEq(['_id', '$oid'], 'someidofelement');
+        const hfIndices = pipe(
+            zipWithIndex,
+            filter(pipe(head, pathEqualId)),
+            map(nth(1)),
+            head
+        );
+        const index = hfIndices(state[action.from]);
+```
+
+**Take Deep Prop**
+
+```
+// Imagine a react component
+import {path} from 'ramda'
+const name = path(['body', 'data', 'name'])
+<h1>{name(this.props.response)}</h1>
+```
+
+All functions in Ramda are curried. That means that the data is passed in last. So name here is actually a function which expects an argument that has an object with the path of body.data.name. It’s okay if it doesn’t. If the path does not exist the function will return undefined but without the run-time error.
