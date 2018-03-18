@@ -1,7 +1,7 @@
 ---
 preview: **Ramda some samples:**
 title: ramda
-tags: FP, -----post-locked-by:rrLero
+tags: FP
 author: rrLero
 date: 2018-03-17 22:42:00
 ---
@@ -65,3 +65,6 @@ const decreaseCount = over(countLens, dec)
     this.setState(increaseCount)
   }
 ```
+
+**useFull links:**
+https://monsterlessons.com/project/lessons/izmenenie-polej-obuekta-s-ramda-lenses
