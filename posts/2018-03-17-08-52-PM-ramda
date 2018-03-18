@@ -1,7 +1,7 @@
 ---
 preview: **Ramda some samples:**
 title: ramda
-tags: FP, -----post-locked-by:rrLero
+tags: FP
 author: rrLero
 date: 2018-03-17 22:42:00
 ---
@@ -29,3 +29,39 @@ const name = path(['body', 'data', 'name'])
 ```
 
 All functions in Ramda are curried. That means that the data is passed in last. So name here is actually a function which expects an argument that has an object with the path of body.data.name. It’s okay if it doesn’t. If the path does not exist the function will return undefined but without the run-time error.
+
+**Update Deep Object**
+
+```
+this.state = {
+  a: {
+    name: 'pointless structure',
+    b : {
+      stuff: 'things',
+      count: 0
+    }
+  }
+}
+```
+
+This new state is incredibly contrived, but it’ll help illustrate the point. Now, in order to update the count, we need to update property a, which in turn needs an updated b and that will contain our updated count. The update function for increase will now need to look like this:
+
+```
+increase() {
+  this.setState((state) => ({a: {...state.a, b: {...state.a.b, count: state.a.b.count + 1}} }))
+}
+```
+
+in Ramda looks better:
+
+```
+import {inc, dec, lensPath, over} from 'ramda'
+
+const countLens = lensPath(['a', 'b', 'count'])
+const increaseCount = over(countLens, inc)
+const decreaseCount = over(countLens, dec)
+
+  increase() {
+    this.setState(increaseCount)
+  }
+```
