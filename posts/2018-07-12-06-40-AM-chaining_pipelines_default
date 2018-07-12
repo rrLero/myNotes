@@ -1,0 +1,218 @@
+---
+preview: # 1. Optional Chaining
+title: Here are three upcoming changes to JavaScript that you’ll love
+tags: js
+author: rrLero
+date: 18-07-12 09:30
+---
+In JavaScript we are constantly working with Objects. Sometimes these Objects do not have the exact shape that we expect. Below you’ll find a contrived example of a data object — maybe it was retrieved from a database or API call.
+
+```
+const data = {
+  user: {
+    address: {
+      street: 'Pennsylvania Avenue',
+    }, 
+  },
+};
+```
+
+or 
+
+```
+const data = {
+  user: {},
+};
+```
+
+to avoid error in 
+
+```
+console.log(data.user.address.street); // Uncaught TypeError: Cannot read property 'street' of undefined
+```
+
+To avoid this, we currently must access the “street” property like this:
+
+```
+const street = data && data.user && data.user.address && data.user.address.street;
+console.log(street); // undefined
+```
+
+Here’s where optional chaining comes in. You can use it like this:
+
+```
+console.log(data.user?.address?.street); // undefined
+```
+
+That’s much easier, right? Now that we see the usefulness of this feature, we can go ahead and take a deeper look.
+
+
+Here’s how optional chaining works for array property access:
+
+```
+const valid = {
+  user: {
+    address: {
+      street: 'main street',
+      neighbors: [
+        'john doe',
+        'jane doe',
+      ],
+    },
+  },
+};
+
+function getNeighbor(data, number) {
+  return data?.user?.address?.neighbors?.[number];
+}
+
+test('Optional chaining works for array properties', (t) => {
+  t.is(getNeighbor(valid, 0), 'john doe');
+});
+
+test('Optional chaining returns undefined for invalid array properties', (t) => {
+  t.is(getNeighbor({}, 0), undefined);
+});
+```
+
+Sometimes we don’t know if a function is implemented inside an Object.
+
+A common example of this is when you are using a web browser. Some older browsers may not have certain functions. Thankfully we can use optional chaining to detect if a function is implemented!
+
+```
+const data = {
+  user: {
+    address: {
+      street: 'main street',
+      neighbors: [
+        'john doe',
+        'jane doe',
+      ],
+    },
+    getNeighbors() {
+      return data.user.address.neighbors;
+    }
+  },
+};
+
+function getNeighbors(data) {
+  return data?.user?.getNeighbors?.();
+}
+  
+test('Optional chaining also works with functions', (t) => {
+  const neighbors = getNeighbors(data);
+  t.is(neighbors.length, 2);
+  t.is(neighbors[0], 'john doe');
+});
+
+test('Optional chaining returns undefined if a function does not exist', (t) => {
+  const neighbors = getNeighbors({});
+  t.is(neighbors, undefined);
+});
+```
+
+# 2. Nullish coalescing
+
+> Coalesce: to blend or come together
+Here are a few common operations that we see in JavaScript:
+
+1. Checking for undefined or null values
+1. Defaulting Values
+1. Ensuring the literal values 0, false, and ''are not defaulted.
+
+You may have seen it done like this:
+
+`value != null ? value : 'default value';`
+
+Or you may have seen it improperly done like this:
+
+`value || 'default value'`
+
+The problem is that for the second implementation, our third operation condition is not met. The number zero, the boolean false, and an empty string are all considered false in this scenario. That’s why we must check for null and undefined explicitly.
+
+`value != null`
+
+Which is the same as:
+
+`value !== null && value !== undefined`
+
+This is where the new proposal, nullish coalescing, comes in. Now we can do:
+
+`value ?? 'default value';`
+
+This protects us from accidentally defaulting those falsy values, but still catches null and undefined without a 
+ternary and != null check.
+
+Now that we see the syntax, we can write a simple test to validate how it works.
+
+```
+import test from 'ava';
+
+test('Nullish coalescing defaults null', (t) => {
+  t.is(null ?? 'default', 'default');
+});
+
+test('Nullish coalescing defaults undefined', (t) => {
+  t.is(undefined ?? 'default', 'default');
+});
+
+test('Nullish coalescing defaults void 0', (t) => {
+  t.is(void 0 ?? 'default', 'default');
+});
+
+test('Nullish coalescing does not default 0', (t) => {
+  t.is(0 ?? 'default', 0);
+});
+
+test('Nullish coalescing does not default empty strings', (t) => {
+  t.is('' ?? 'default', '');
+});
+
+test('Nullish coalescing does not default false', (t) => {
+  t.is(false ?? 'default', false);
+});
+```
+
+# 3. Pipeline operator
+
+In functional programming, we have a term “composition,” which is the act of chaining together multiple function calls. Each function receives as its input the output of the previous function. Here’s an example of what we’re talking about in plain JavaScript:
+
+```
+function doubleSay (str) {
+  return str + ", " + str;
+}
+function capitalize (str) {
+  return str[0].toUpperCase() + str.substring(1);
+}
+function exclaim (str) {
+  return str + '!';
+}
+let result = exclaim(capitalize(doubleSay("hello")));
+result //=> "Hello, hello!"
+```
+
+This stringing together is so common that composition functions are present in most functional libraries like lodash and ramda.
+
+With the new pipeline operator, you can skip the third party library and write the above like this:
+
+```
+let result = "hello"
+  |> doubleSay
+  |> capitalize
+  |> exclaim;
+
+result //=> "Hello, hello!"
+```
+
+The purpose is to make the chain more readable. It will also work nicely with partial application in the future, or for now it can be implemented like this:
+
+```
+let result = 1
+  |> (_ => Math.max(0, _));
+
+result //=> 1
+let result = -5
+  |> (_ => Math.max(0, _));
+
+result //=> 0
+```
