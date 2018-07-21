@@ -1,7 +1,7 @@
 ---
 preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
 title: Understanding Javascript Selectors With and Without Reselect
-tags: js, -----post-locked-by:rrLero
+tags: js
 author: rrLero
 date: 2018-07-21 20:42:00
 ---
@@ -211,3 +211,55 @@ const mapStateToPropsSelector = createStructuredSelector({
   totalTaxPercent: taxSelector
 })
 ```
+
+# Passing an argument to a selector
+**Passing an argument that’s a prop:**
+If you’re trying to pass a prop into a selector you’re in luck! In addition to state selectors can also accept props. Let’s look at an example:
+
+```
+// In a selector file
+import { createSelector } from 'reselect'
+
+const getShopItemsByCategory = (state, props) =>
+  state.shop.items[props.category]
+
+const getInStockShopItems = createSelector(
+  getShopItemsByCategory,
+  (items) => items.filter(item => item.in_stock)
+)
+
+// Used in a component
+class ShopItems extends React.Component {
+  // display shop items
+}
+const mapStateToProps = (state, props) => {
+  return {
+    itemsInStock: getInStockShopItems(state, props)
+  }
+}
+```
+
+> “ But there is a problem!” — Reselect’s docs quoting Redux’s docs
+
+If the component that’s using the selector with props is in multiple places you could end up with a memoization error. Why? Because if we have more than one instance of a component the selector is shared between all of these instances.
+
+```
+import React from 'react'
+import ShopItems from '../components/ShopItems'
+
+const Shop = () => (
+  <div>
+    <ShopItems category="belts" />
+    <ShopItems category="dresses" />
+    <ShopItems category="pants" />
+  </div>
+)
+```
+
+So on one call the props passed to getInStockShopItems would be `props.category === ‘belts'`, in another instance it’s receiving `props.category === 'dresses'` and in another it’s `props.category === ‘pants'`. This is a problem because Reselect selectors have a cache size of 1, which means that in this case the selector’s cache will be shared between each instance and will recompute an unnecessary amount of times because its inputs would be changing for each `ShopItems` rendered.
+
+The way around this is to ensure that each instance of a component has its own private copy of the selector and therefore is unaffected by the going ons (or props) of any other instance.
+
+To pass props to a selector that’s private to that instance of a component you can take advantage of this fact:
+
+> “ If the mapStateToProps argument supplied to connect returns a function instead of an object, it will be used to create an individual mapStateToProps function for each instance of the container.” (x)
