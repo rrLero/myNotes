@@ -1,7 +1,7 @@
 ---
 preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
 title: Understanding Javascript Selectors With and Without Reselect
-tags: js
+tags: js, -----post-locked-by:rrLero
 author: rrLero
 date: 2018-07-21 20:42:00
 ---
