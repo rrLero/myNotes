@@ -1,7 +1,7 @@
 ---
 preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
 title: Understanding Javascript Selectors With and Without Reselect
-tags: js, -----post-locked-by:rrLero
+tags: js
 author: rrLero
 date: 2018-07-21 20:42:00
 ---
@@ -239,7 +239,7 @@ const mapStateToProps = (state, props) => {
 }
 ```
 
-> “ But there is a problem!” — Reselect’s docs quoting Redux’s docs
+> *“ But there is a problem!” — Reselect’s docs quoting Redux’s docs*
 
 If the component that’s using the selector with props is in multiple places you could end up with a memoization error. Why? Because if we have more than one instance of a component the selector is shared between all of these instances.
 
@@ -262,4 +262,117 @@ The way around this is to ensure that each instance of a component has its own p
 
 To pass props to a selector that’s private to that instance of a component you can take advantage of this fact:
 
-> “ If the mapStateToProps argument supplied to connect returns a function instead of an object, it will be used to create an individual mapStateToProps function for each instance of the container.” (x)
+> *“ If the mapStateToProps argument supplied to connect returns a function instead of an object, it will be used to create an individual mapStateToProps function for each instance of the container.” (x)*
+
+To accomplish this in practice:
+
+1. Create a function that returns a selector.
+
+```
+// In a selector file
+import { createSelector } from 'reselect'
+
+const getShopItemsByCategory = (state, props) =>
+  state.shop.items[props.category]
+
+const makeGetInStockShopItems = () => {
+return createSelector(
+  getItemsByCategory,
+  (items) => items.filter(item => item.in_stock)
+)
+}
+```
+
+2. In the component that is using selector, create a function that returns a `mapStateToProps` object that uses the `makeGetInStockShopItems` function (created in step 1) to create a new copy of the selector.
+
+```
+// Used in a component
+class ShopItems extends React.Component {
+  // display shop items
+}
+
+const makeMapStateToProps = () => {
+  const getInStockShopItems = makeGetInStockShopItems()
+  const mapStateToProps = (state, props) => {
+    return {
+      itemsInStock: getInStockShopItems(state, props)
+    }
+  }
+	return mapStateToProps
+}
+```
+
+This will create a private mapStateToProps function for each instance of the component.
+
+3. Pass the `makeMapStateToProps` function (created in step 2), to Redux’s `connect` function where you would normally insert `mapStateToProps`
+
+```
+// Used in a component
+class ShopItems extends React.Component {
+  // display shop items
+}
+
+const makeMapStateToProps = () => {
+  const getInStockShopItems = makeGetInStockShopItems()
+  const mapStateToProps = (state, props) => {
+    return {
+      itemsInStock: getInStockShopItems(state, props)
+    }
+  }
+	return mapStateToProps
+}
+
+export default connect(
+  makeMapStateToProps
+)(ShopItems)
+```
+
+And that’s it!
+
+**Passing an argument that’s a static value:**
+
+In this case you can use a factory function. The example below is from the Reselect docs.
+
+```
+const expensiveItemSelectorFactory = minValue => {
+  return createSelector(
+    shopItemsSelector,
+    items => items.filter(item => item.value > minValue)
+  )
+}
+
+const subtotalSelector = createSelector(
+  expensiveItemSelectorFactory(200),
+  items => items.reduce((acc, item) => acc + item.value, 0)
+)
+```
+
+**Passing an argument that is a dynamic value:**
+
+If you’re passing dynamic values to your selectors, Reselect suggest that value should be in your store and available via state and thus you wouldn’t need to pass in the value, the selector could retieve it directly like the normal flow of things.
+
+However, if you feel like the dynamic value shouldn’t be in the store then you can create a selector that returns a function with that dynamic value as an argument.
+
+The gotcha here is that you would need to memoize this function on your own as Reselect selectors only have a cache of 1 and therefore couldn’t memoize your additional arguments. The normal way of providing memoization to subsequent arguments are to use the `memoize` function provided by Lodash. This example below is also straight from the [docs ](https://github.com/reduxjs/reselect#q-how-do-i-create-a-selector-that-takes-an-argument)— which you should really check out!
+
+```
+import { createSelector } from 'reselect'
+import memoize from 'lodash.memoize'
+
+const expensiveSelector = createSelector(
+  state => state.items,
+  items => memoize(
+    minValue => items.filter(item => item.value > minValue)
+  )
+)
+
+const expensiveFilter = expensiveSelector(state)
+```
+
+# Summary
+
+What are selectors: Selectors are functions that can be used to retrieve and/or derive data from a central data store. You can create selectors independent of any library.
+
+Why use selectors: Selectors encapsulate knowledge of where data lives and how to derive it, and therefore can help you write more reusable code.
+
+Why use Reselect: Reselect offers a performance enhancement as it provides a way to create selectors that are memoized and only recompute when their inputs have changed. This is beneficial in complex apps that are structured to have a minimal store and therefore rely on selectors to compute derived data (such as filtering, reducing, etc) which can be expensive operations.
