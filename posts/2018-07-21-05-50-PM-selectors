@@ -1,0 +1,74 @@
+---
+preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
+title: Understanding Javascript Selectors With and Without Reselect
+tags: js
+author: rrLero
+date: 18-07-21 20:42
+---
+# What are Selectors?
+At their most simple, Selectors are simply functions that are used to select a subset data from a larger data collection.
+
+## Selectors:
+
+1. Have knowledge of the whereabouts or path to find a particular subset of data and
+1. Return with the requested subset of data
+
+## In code:
+A selector to retrieve belts from a store could look like this:
+`const getBelts = (state) => state.items.belts`
+
+# Why Use Selectors?
+Basic selectors (i.e simple functions that return a subset of data) are beneficial because they encapsulate knowledge of where to find that particular subset of data, they are also reusable and flexible. To see what I mean, let’s take a look at an example `DisplayBelts.js` component that isn’t using a selector to find belts.
+
+```
+// Select belts from the store without use of selectos
+class DisplayBelts extends React.Component {
+  render() {
+    return this.props.belts.map(belt => <img src={belt.imgUrl} />)
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    belts: state.items.belts
+  }
+}
+```
+
+What would happen if the business owners opened a cafe next door and the store of their online app was re-structured so that belts were now found here: `state.shop.items.belts`? The query in `DisplayBelts.js's mapStateToProps` function would need to be updated to become `belts: state.shop.items.belts` . Which isn’t too bad. But if the app had other components pulling out belts from the store then the developer would have to update the query in every place that’s pulling that information (not to mention updating all other queries that would be affected by the store restructure like `DisplayHats` , `DisplayShirts`, etc.).
+
+What would it look like to create and use a selector that retrieves belts?
+
+```
+// Note: selectors are usually created in a relevant reducer file or a separate selectors file
+const getBelts = (state) => state.shop.items.belts;
+
+// in DisplayBelts.js
+class DisplayBelts extends React.Component {
+  render() {
+    return this.props.belts.map(belt => <img src={belt.imgUrl} />);
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    belts: getBelts(state)
+  }
+}
+```
+
+In the above example you can see that the basic selector, `getBetls` is just a function of state that returns a specified piece of state (in this case belts). If in the future the business owners decided to re-structure their store again, after updating relevant reducers the developer would only have to update `getBelts`.
+
+Because selectors are just functions they are also composable:
+
+```
+
+const getItems = state => state.shop.items
+
+const getBelts = state => {
+  const items = getItems()
+  return items.belts
+}
+```
+
+To summarize, even the most basic selectors provide the encapsulation of knowledge of where to find data which leads the ability to write reusable and composable code.
