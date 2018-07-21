@@ -1,7 +1,7 @@
 ---
 preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
 title: Understanding Javascript Selectors With and Without Reselect
-tags: js, -----post-locked-by:rrLero
+tags: js
 author: rrLero
 date: 2018-07-21 20:42:00
 ---
@@ -140,3 +140,74 @@ As you can see createSelector is a function that takes two arguments:
 
 1. Selector(s) — if you have multiple selectors they can be inputted as a comma separated (like shown above) or as an array.
 1. A tranformer function that takes the values of the selectors from the first arguments and uses them to select or derive relevant data
+
+# Using Reselect
+
+### *To retrieve state in a component*
+
+```
+import {totalSelector} from 'path/to/selector'
+
+class Inventory extends React.Component {
+  render() {
+    return <h1>`The shop's total inventory is: ${this.props.inventoryValue}`</h1>
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    inventoryValue: totalSelector(state)
+  }
+}
+```
+
+This is the most basic use case and is implemented the same way that you would use a selector that wasn’t created with Reselect.
+
+### *Replacing a `mapStateToProps` function with a selector*
+
+As a further performance enhancer, a React component’s `mapStateToProps` function can be replaced with a selector to cut down on the number of times the component is re-rendered.
+
+```
+import {totalSelector} from 'path/to/selector'
+import {createSelector} from 'reselect'
+
+class Inventory extends React.Component {
+  render() {
+    return <h1>`The shop's total inventory is: ${this.props.inventoryValue}`</h1>
+  }
+}
+
+const mapStateToPropsSelector = createSelector(
+  totalSelector,
+  (total) => {
+    return {inventoryValue: total}
+  }
+)
+```
+
+### *Using CreateStructuredSelector*
+
+To cut down on boilerplate, Reselect offers a `createStructuredSelector` that can be used in place of a `creatSelector` function that is being passed to `connect`. It is most helpful to use in components that are pulling in a number of selectors.
+
+```
+import {subtotalSelector, taxPercentSelector, taxSelector, totalSelector} from 'path/to/selector'
+import {createStructuredSelector} from 'reselect'
+
+class Inventory extends React.Component {
+  render() {
+    return (
+      <h1>`The shop's total inventory is: ${this.props.inventoryValue}`</h1>
+      <h3>`The shop's subtotal inventory is ${this.props.inventorySubtotal}`</h3>
+      <h3>`The shop's tax percent is ${this.props.taxPercent}`</h3>
+      <h3>`This shop's total tax percent is ${this.props.totalTaxPercent}`</h3>
+    )
+  }
+}
+
+const mapStateToPropsSelector = createStructuredSelector({
+  inventorySubtotal: subtotalSelector,
+  inventoryValue: totalSelector,
+  taxPercent: taxPercentSelector,
+  totalTaxPercent: taxSelector
+})
+```
