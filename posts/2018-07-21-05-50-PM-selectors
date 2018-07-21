@@ -1,7 +1,7 @@
 ---
 preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
 title: Understanding Javascript Selectors With and Without Reselect
-tags: js, -----post-locked-by:rrLero
+tags: js
 author: rrLero
 date: 2018-07-21 20:42:00
 ---
@@ -283,7 +283,7 @@ return createSelector(
 }
 ```
 
-1. In the component that is using selector, create a function that returns a `mapStateToProps` object that uses the `makeGetInStockShopItems` function (created in step 1) to create a new copy of the selector.
+2. In the component that is using selector, create a function that returns a `mapStateToProps` object that uses the `makeGetInStockShopItems` function (created in step 1) to create a new copy of the selector.
 
 ```
 // Used in a component
@@ -304,7 +304,7 @@ const makeMapStateToProps = () => {
 
 This will create a private mapStateToProps function for each instance of the component.
 
-1. Pass the `makeMapStateToProps` function (created in step 2), to Redux’s `connect` function where you would normally insert `mapStateToProps`
+3. Pass the `makeMapStateToProps` function (created in step 2), to Redux’s `connect` function where you would normally insert `mapStateToProps`
 
 ```
 // Used in a component
