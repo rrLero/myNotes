@@ -1,7 +1,7 @@
 ---
 preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
 title: Understanding Javascript Selectors With and Without Reselect
-tags: js, -----post-locked-by:rrLero
+tags: js
 author: rrLero
 date: 2018-07-21 20:42:00
 ---
@@ -138,5 +138,5 @@ export const totalSelector = createSelector(
 
 As you can see createSelector is a function that takes two arguments:
 
-1.Selector(s) — if you have multiple selectors they can be inputted as a comma separated (like shown above) or as an array.
-2.A tranformer function that takes the values of the selectors from the first arguments and uses them to select or derive relevant data
+1. Selector(s) — if you have multiple selectors they can be inputted as a comma separated (like shown above) or as an array.
+1. A tranformer function that takes the values of the selectors from the first arguments and uses them to select or derive relevant data
