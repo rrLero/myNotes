@@ -1,7 +1,7 @@
 ---
 preview: While Selectors aren’t particular to Javascript, React, Redux or Reselect, this article will focus on their use in the context of those technologies and assumes you have a solid understanding of both React and Redux. So, let’s begin!
 title: Understanding Javascript Selectors With and Without Reselect
-tags: js, -----post-locked-by:rrLero
+tags: js
 author: rrLero
 date: 2018-07-21 20:42:00
 ---
@@ -72,3 +72,71 @@ const getBelts = state => {
 ```
 
 To summarize, even the most basic selectors provide the encapsulation of knowledge of where to find data which leads the ability to write reusable and composable code.
+
+# Why Use Reselect to Create Selectors?
+The short answer is: for performance as Reselect provides a wrapper for creating selectors that are **memoized**.
+
+The examples of selectors that you’ve seen so far have only been responsible for retrieving data as it appears in the redux store. This would only likely be enough in small apps where the data that app needs can found directly in the store. However, in larger and more complex apps, it’s advisable to keep the store with minimal amount of information as it cuts down on repetition and generally helps to avoid highly nested data that results in more complex reducer logic. This is especially relevant for apps that are structured with a normalized store.
+
+In any case— *selectors can be used to compute derived data.*
+
+Going back to our business app, suppose we wanted to find the current value of all items in the store.
+
+We could create a the following selectors:
+
+```
+
+const shopItemsSelector = state => state.shop.items
+const taxPercentSelector = state => state.shop.taxPercent
+
+const subtotalSelector = state => {
+  const items = shopItems(state)
+  return items => items.reduce((acc, item) => acc + item.value, 0)
+}
+
+const taxSelector = state => {
+  const subtotal = subtotalSelector(state)
+  const taxPercent = taxPercentSelector(state)
+  return (subtotal, taxPercent) => subtotal * (taxPercent / 100)
+}
+
+export const totalSelector = state => {
+  const subtotal = subtotalSelector(state)
+  const tax = taxSelector(state)
+  return (subtotal, tax) => ({ total: subtotal + tax })
+}
+```
+
+When you factor in the fact that generally speaking React components re-render whenever their or their parent’s state or props change — the computation of derived data can easily become expensive. The biggest benefit of Reselect is that selectors created with the library are memoized and therefore will only re-run if their arguments change.
+
+# Reselect’s Syntax
+Reselect offers up a function called createSelector() that’s used to create memoized selectors. Here is example code from the docs that our business app examples built off of.
+
+```
+import { createSelector } from 'reselect'
+
+const shopItemsSelector = state => state.shop.items
+const taxPercentSelector = state => state.shop.taxPercent
+
+const subtotalSelector = createSelector(
+  shopItemsSelector,
+  items => items.reduce((acc, item) => acc + item.value, 0)
+)
+
+const taxSelector = createSelector(
+  subtotalSelector,
+  taxPercentSelector,
+  (subtotal, taxPercent) => subtotal * (taxPercent / 100)
+)
+
+export const totalSelector = createSelector(
+  subtotalSelector,
+  taxSelector,
+  (subtotal, tax) => ({ total: subtotal + tax })
+)
+```
+
+As you can see createSelector is a function that takes two arguments:
+
+1.Selector(s) — if you have multiple selectors they can be inputted as a comma separated (like shown above) or as an array.
+2.A tranformer function that takes the values of the selectors from the first arguments and uses them to select or derive relevant data
