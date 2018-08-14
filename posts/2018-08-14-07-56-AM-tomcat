@@ -1,0 +1,11 @@
+---
+preview: To reload TomCat
+title: Reload_Tomcat
+tags: tomcat
+author: rrLero
+date: 18-08-14 10:52
+---
+1. Run > Edit Configuration > TomCat Server > Deployment
+2. Delete Web.war
+3. Rebuild Gradle
+4. Add Web.war to tomCat Deployment
