@@ -1,7 +1,7 @@
 ---
 preview: # Vue глазами React-разработчика
 title: Vue_By_React_Developper
-tags: text, -----post-locked-by:rrLero
+tags: text
 author: rrLero
 date: 2018-10-04 09:08:00
 ---
@@ -10,3 +10,7 @@ date: 2018-10-04 09:08:00
 Сравнение React and Angular.
 ![](https://cdn-images-1.medium.com/max/1000/1*w9DLq-pSxDGabNxUzawN_w.png)
 рассказ о том что хорошее из двух фреймворков взял Vue на примере картинки
+
+2. Применение типизации во Vue.
+
+3. Немного про flux-vuex - что хорошее взял от Redux.
