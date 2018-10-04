@@ -1,7 +1,7 @@
 ---
 preview: # Vue глазами React-разработчика
 title: Vue_By_React_Developper
-tags: text, -----post-locked-by:rrLero
+tags: text
 author: rrLero
 date: 2018-10-04 09:08:00
 ---
@@ -9,3 +9,4 @@ date: 2018-10-04 09:08:00
 [](https://medium.freecodecamp.org/a-comparison-between-angular-and-react-and-their-core-languages-9de52f485a76)
 Сравнение React and Angular.
 ![](https://cdn-images-1.medium.com/max/1000/1*w9DLq-pSxDGabNxUzawN_w.png)
+рассказ о том что хорошее из двух фреймворков взял Vue на примере картинки
