@@ -1,0 +1,28 @@
+---
+preview: To switch Sub/Center sound chanel in ubuntu you need
+title: How switch Center and Sub in Ubuntu
+tags: ubuntu
+author: rrLero
+date: 18-10-14 11:43
+---
+1- Run in terminal  `gksu gedit /usr/share/pulseaudio/alsa-mixer/profile-sets/default.conf `This is the file where the channel map is, enter you pasword when prompted, and the file will open.
+
+2- You are looking for the code that looks like this-
+
+
+```
+[Mapping analog-surround-51]
+device-strings = surround51:%f
+channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
+paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-lfe-on-mono
+priority = 8
+direction = output
+```
+
+3- It may not be exactly the same, but we want to change only the channel-map order
+from -
+`channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe`
+to -
+`channel-map = front-left,front-right,rear-left,rear-right,lfe,front-center`
+
+Notice the order on lfe and front-center, lfe is the subwoofer, and front-center is your center speaker, if it displays another configuration, just swap position of lfe and front-center
