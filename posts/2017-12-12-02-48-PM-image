@@ -1,7 +1,7 @@
 ---
 preview: # Оптимизация Изображений
 title: Оптимизация Изображений
-tags: image, -----post-locked-by:rrLero
+tags: image
 author: rrLero
 date: 2017-12-12 16:39:00
 ---
@@ -60,6 +60,7 @@ date: 2017-12-12 16:39:00
 |jpegtran	|optimize JPEG images|
 |optipng	|lossless PNG optimization|
 |pngquant|	lossy PNG optimization|
+|https://squoosh.app/ |modern site for optimization|
 
 ## Масштабирование передаваемых изображений
 Размер изображения - это сумма пикселей, умноженная на число байтов, используемых для кодирования каждого пикселя. Оптимизация изображения сводится к уменьшения этих двух составляющих.
