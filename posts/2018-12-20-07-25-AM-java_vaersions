@@ -1,0 +1,11 @@
+---
+preview: Java install linux
+title: Java Linux
+tags: Java
+author: rrLero
+date: 18-12-20 09:22
+---
+1. Install Java folder to JAVA_HOME `echo $JAVA_HOME`
+2. In terminal `export PATH=$PWD/MY_JDK_FOLDER/bin:$PATH`
+3. `which java` - will show run-file
+4.
