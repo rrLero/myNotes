@@ -1,9 +1,9 @@
 ---
 preview: Java install linux
 title: Java Linux
-tags: Java
+tags: Java, -----post-locked-by:rrLero
 author: rrLero
-date: 18-12-20 09:22
+date: 2018-12-20 09:22:00
 ---
 1. Install Java folder to JAVA_HOME `echo $JAVA_HOME`
 2. In terminal `export PATH=$PWD/MY_JDK_FOLDER/bin:$PATH`
