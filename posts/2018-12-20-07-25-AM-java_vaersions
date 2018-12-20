@@ -1,11 +1,12 @@
 ---
 preview: Java install linux
 title: Java Linux
-tags: Java, -----post-locked-by:rrLero
+tags: Java
 author: rrLero
 date: 2018-12-20 09:22:00
 ---
 1. Install Java folder to JAVA_HOME `echo $JAVA_HOME`
 2. In terminal `export PATH=$PWD/MY_JDK_FOLDER/bin:$PATH`
 3. `which java` - will show run-file
-4.
+4. In Idea find icon "Project Structure" (ctrl + alt + shift + s), and choose correct java
+5. Refresh Gradle
