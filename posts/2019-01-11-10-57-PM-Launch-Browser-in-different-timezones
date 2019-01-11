@@ -1,0 +1,10 @@
+---
+preview: To launch Browser in different timezones
+title: CHROME
+tags: js
+author: rrLero
+date: 19-01-11 00:55
+---
+only type in terminal:
+
+`TZ='Europe/Rome' google-chrome "--user-data-dir=$HOME/chrome-profile"`
