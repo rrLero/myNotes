@@ -1,0 +1,15 @@
+---
+preview: DB
+title: Idea PG DB - tips
+tags: database
+author: rrLero
+date: 19-03-25 10:35
+---
+Give all privilages to user
+
+```
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO zfrbaanjjgzfqc;
+```
+
+
+`sslmode: required` - for ssl connection
