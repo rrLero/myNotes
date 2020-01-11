@@ -1,0 +1,14 @@
+---
+preview: **Create DB**
+
+
+title: Create DB
+tags: db
+author: rrLero
+date: 20-01-11 16:40
+---
+1. [](http://conftool-main:8080/#/setuprtsbranch)
+2. select branch
+
+**Clean DB**
+1. [](http://conftool-main:8080/#/databasecleanup)
