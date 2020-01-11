@@ -1,12 +1,12 @@
 ---
 preview: **Create DB**
 title: Create DB
-tags: db, -----post-locked-by:rrLero
+tags: db
 author: rrLero
 date: 2020-01-11 16:40:00
 ---
-1. [conftool-main:8080/#/setuprtsbranch](http://)
+1. [conftool-main:8080/#/setuprtsbranch](http://conftool-main:8080/#/setuprtsbranch)
 2. select branch
 
 **Clean DB**
-1. [conftool-main:8080/#/databasecleanup](http://)
+1. [conftool-main:8080/#/databasecleanup](http://conftool-main:8080/#/databasecleanup)
