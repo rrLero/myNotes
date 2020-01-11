@@ -1,10 +1,12 @@
 ---
 preview: Tips
 title: SQL Tips
-tags: SQL, -----post-locked-by:rrLero
+tags: SQL
 author: rrLero
 date: 2019-09-17 12:22:00
 ---
 `select top 100 pbid, weburl, * from dbd.dbo.BusinessEntity where weburl like '%,%'`
+
 `SELECT * from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME like 'researchStatus';`
+
 `SELECT * from TargetCompany where BusinessEntityId=3706544`
