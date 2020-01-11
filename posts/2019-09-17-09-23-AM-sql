@@ -1,8 +1,8 @@
 ---
 preview: Tips
 title: SQL Tips
-tags: SQL
+tags: SQL, -----post-locked-by:rrLero
 author: rrLero
-date: 19-09-17 12:22
+date: 2019-09-17 12:22:00
 ---
 `select top 100 pbid, weburl, * from dbd.dbo.BusinessEntity where weburl like '%,%'`
