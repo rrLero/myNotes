@@ -1,0 +1,8 @@
+---
+preview: Ubuntu tips
+title: Ubuntu tips
+tags: ubuntu
+author: rrLero
+date: 20-02-07 09:11
+---
+`kill $(lsof -t -i:8080)` - kill port 8080
