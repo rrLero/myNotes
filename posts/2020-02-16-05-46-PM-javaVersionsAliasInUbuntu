@@ -1,7 +1,7 @@
 ---
 preview: Firts step
 title: Java Versions Aliases
-tags: java, -----post-locked-by:rrLero
+tags: java
 author: rrLero
 date: 2020-02-16 19:41:00
 ---
@@ -21,3 +21,5 @@ and add
 export JAVA_HOME=/usr/lib/jvm/{path-to-needed-java-version}/
 export PATH=$PATH:$JAVA_HOME
 ```
+
+to switch simple type `java11` or `java8` in the terminal
