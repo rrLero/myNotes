@@ -1,9 +1,9 @@
 ---
 preview: Firts step
 title: Java Versions Aliases
-tags: java
+tags: java, -----post-locked-by:rrLero
 author: rrLero
-date: 20-02-16 19:41
+date: 2020-02-16 19:41:00
 ---
 add to `etc/bash.bashrc` such lines
 
