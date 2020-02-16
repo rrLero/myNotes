@@ -1,0 +1,23 @@
+---
+preview: Firts step
+title: Java Versions Aliases
+tags: java
+author: rrLero
+date: 20-02-16 19:41
+---
+add to `etc/bash.bashrc` such lines
+
+```
+# Java Alias
+alias java8='source /opt/java/switch/java8.sh'
+alias java11='source /opt/java/switch/java11.sh'
+```
+
+create those files in opt/java/switch
+
+and add
+
+```
+export JAVA_HOME=/usr/lib/jvm/{path-to-needed-java-version}/
+export PATH=$PATH:$JAVA_HOME
+```
