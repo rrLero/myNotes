@@ -1,7 +1,7 @@
 ---
 preview: Firts step
 title: Java Versions Aliases
-tags: java
+tags: java, -----post-locked-by:rrLero
 author: rrLero
 date: 2020-02-16 19:41:00
 ---
