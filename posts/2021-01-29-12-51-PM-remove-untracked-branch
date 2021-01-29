@@ -1,0 +1,13 @@
+---
+preview: ```
+git branch --merged master | grep -v "master" | xargs git branch -D
+```
+
+title: Remove Untracked Branch
+tags: GIT
+author: rrLero
+date: 21-01-29 14:50
+---
+```
+git branch --merged master | grep -v "master" | xargs git branch -D
+```
